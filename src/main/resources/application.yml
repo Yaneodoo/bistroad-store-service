@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: "store-service"
+  cloud:
+    kubernetes:
+      config:
+        namespace: bistroad-prod
