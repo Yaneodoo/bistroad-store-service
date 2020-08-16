@@ -23,7 +23,7 @@ class StoreItemService(
             store.addMenuItem(this)
         }
 
-        storeRepository.save(store)
+        storeItemRepository.save(item)
         return StoreItemDto.CruRes.fromEntity(item)
     }
 
@@ -54,7 +54,7 @@ class StoreItemService(
             }
         }
 
-        storeRepository.save(item.store!!)
+        storeItemRepository.save(item)
         return StoreItemDto.CruRes.fromEntity(item)
     }
 
