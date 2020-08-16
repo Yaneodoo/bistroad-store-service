@@ -28,7 +28,7 @@ class StoreItemService(
     }
 
     fun readStoreItem(storeId: UUID, id: UUID): StoreItemDto.CruRes? {
-        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: error("Store item not found")
+        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: return null
         return StoreItemDto.CruRes.fromEntity(item)
     }
 
