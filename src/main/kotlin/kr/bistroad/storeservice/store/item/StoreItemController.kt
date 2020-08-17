@@ -1,5 +1,6 @@
 package kr.bistroad.storeservice.store.item
 
+import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -18,13 +19,20 @@ class StoreItemController(
 
     @PostMapping("/stores/{storeId}/items")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
+    @ResponseStatus(HttpStatus.CREATED)
     fun postStoreItem(@PathVariable storeId: UUID, @RequestBody dto: StoreItemDto.CreateReq) =
         storeItemService.createStoreItem(storeId, dto)
 
     @PutMapping("/stores/{storeId}/items/{id}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
-    fun putStoreItem(@PathVariable storeId: UUID, @PathVariable id: UUID, @RequestBody dto: StoreItemDto.PutReq) =
-        storeItemService.putStoreItem(storeId, id, dto)
+    fun putStoreItem(
+        @PathVariable storeId: UUID,
+        @PathVariable id: UUID,
+        @RequestBody dto: StoreItemDto.PutReq
+    ): ResponseEntity<StoreItemDto.CruRes> {
+        val status = if (storeItemService.readStoreItem(storeId, id) == null) HttpStatus.CREATED else HttpStatus.OK
+        return ResponseEntity(storeItemService.putStoreItem(storeId, id, dto), status)
+    }
 
     @PatchMapping("/stores/{storeId}/items/{id}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
