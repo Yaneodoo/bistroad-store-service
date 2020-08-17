@@ -32,8 +32,8 @@ class StoreItemService(
         return StoreItemDto.CruRes.fromEntity(item)
     }
 
-    fun searchStoreItems(): List<StoreItemDto.CruRes> {
-        return storeItemRepository.findAll()
+    fun searchStoreItems(storeId: UUID): List<StoreItemDto.CruRes> {
+        return storeItemRepository.findAllByStoreId(storeId)
                 .map(StoreItemDto.CruRes.Companion::fromEntity)
     }
 

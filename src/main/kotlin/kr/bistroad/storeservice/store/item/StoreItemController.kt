@@ -15,8 +15,8 @@ class StoreItemController(
         storeItemService.readStoreItem(storeId, id)
 
     @GetMapping("/stores/{storeId}/items")
-    fun getStoreItems() =
-        storeItemService.searchStoreItems()
+    fun getStoreItems(@PathVariable storeId: UUID) =
+        storeItemService.searchStoreItems(storeId)
 
     @PostMapping("/stores/{storeId}/items")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
