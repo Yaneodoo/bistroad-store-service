@@ -14,7 +14,7 @@ class StoreController(
     fun getStore(@PathVariable id: UUID) = storeService.readStore(id)
 
     @GetMapping("/stores")
-    fun getStores() = storeService.searchStores()
+    fun getStores(dto: StoreDto.SearchReq) = storeService.searchStores(dto)
 
     @PostMapping("/stores")
     @PreAuthorize("isAuthenticated() and (( #dto.ownerId == principal.userId ) or hasRole('ROLE_ADMIN'))")

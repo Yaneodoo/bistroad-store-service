@@ -26,9 +26,12 @@ class StoreService(
         return StoreDto.CruRes.fromEntity(store)
     }
 
-    fun searchStores(): List<StoreDto.CruRes> {
-        return storeRepository.findAll()
-            .map(StoreDto.CruRes.Companion::fromEntity)
+    fun searchStores(dto: StoreDto.SearchReq): List<StoreDto.CruRes> {
+        val stores = when {
+            dto.ownerId != null -> storeRepository.findAllByOwnerId(dto.ownerId)
+            else -> storeRepository.findAll()
+        }
+        return stores.map(StoreDto.CruRes.Companion::fromEntity)
     }
 
     fun putStore(id: UUID, dto: StoreDto.PutReq): StoreDto.CruRes {

@@ -13,12 +13,9 @@ interface StoreDto {
         data class Location(val lat: Double, val lng: Double)
     }
 
-//    data class SearchReq(
-//            val originLat: Double?,
-//            val originLng: Double?,
-//            val ownerId: UUID?,
-//            val radius: Double?
-//    )
+    data class SearchReq(
+            val ownerId: UUID?
+    )
 
     data class PutReq(
         val ownerId: UUID,
