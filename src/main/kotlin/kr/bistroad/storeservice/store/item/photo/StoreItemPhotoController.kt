@@ -8,7 +8,7 @@ import java.util.*
 
 @RestController
 class StoreItemPhotoController(
-        val storeItemService: StoreItemService
+    val storeItemService: StoreItemService
 ) {
     @PostMapping("/stores/{storeId}/items/{id}/upload-photo")
     fun uploadPhoto(@PathVariable storeId: UUID, @PathVariable id: UUID): Nothing = TODO("WIP")

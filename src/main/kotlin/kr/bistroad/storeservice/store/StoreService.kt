@@ -6,16 +6,16 @@ import java.util.*
 
 @Service
 class StoreService(
-        private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository
 ) {
     fun createStore(dto: StoreDto.CreateReq): StoreDto.CruRes {
         val store = Store(
-                ownerId = dto.ownerId,
-                name = dto.name,
-                phone = dto.phone,
-                description = dto.description,
-                locationLat = dto.location.lat,
-                locationLng = dto.location.lng
+            ownerId = dto.ownerId,
+            name = dto.name,
+            phone = dto.phone,
+            description = dto.description,
+            locationLat = dto.location.lat,
+            locationLng = dto.location.lng
         )
         storeRepository.save(store)
         return StoreDto.CruRes.fromEntity(store)
@@ -28,18 +28,18 @@ class StoreService(
 
     fun searchStores(): List<StoreDto.CruRes> {
         return storeRepository.findAll()
-                .map(StoreDto.CruRes.Companion::fromEntity)
+            .map(StoreDto.CruRes.Companion::fromEntity)
     }
 
     fun putStore(id: UUID, dto: StoreDto.PutReq): StoreDto.CruRes {
         val store = Store(
-                id = id,
-                ownerId = dto.ownerId,
-                name = dto.name,
-                phone = dto.phone,
-                description = dto.description,
-                locationLat = dto.location.lat,
-                locationLng = dto.location.lng
+            id = id,
+            ownerId = dto.ownerId,
+            name = dto.name,
+            phone = dto.phone,
+            description = dto.description,
+            locationLat = dto.location.lat,
+            locationLng = dto.location.lng
         )
         storeRepository.save(store)
         return StoreDto.CruRes.fromEntity(store)

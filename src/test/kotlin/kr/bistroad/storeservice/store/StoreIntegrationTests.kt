@@ -19,7 +19,7 @@ import java.util.*
 @Transactional
 @AutoConfigureMockMvc
 class StoreIntegrationTests(
-        private val ctx: WebApplicationContext
+    private val ctx: WebApplicationContext
 ) {
     private lateinit var mockMvc: MockMvc
 
@@ -34,35 +34,35 @@ class StoreIntegrationTests(
     @Test
     fun `Show a list of stores`() {
         val storeA = Store(
-                id = UUID.randomUUID(),
-                ownerId = UUID.randomUUID(),
-                name = "A store",
-                phone = "01-234-567",
-                description = "The best store ever",
-                locationLat = 0.1,
-                locationLng = 0.1
+            id = UUID.randomUUID(),
+            ownerId = UUID.randomUUID(),
+            name = "A store",
+            phone = "01-234-567",
+            description = "The best store ever",
+            locationLat = 0.1,
+            locationLng = 0.1
         )
         val storeB = Store(
-                id = UUID.randomUUID(),
-                ownerId = UUID.randomUUID(),
-                name = "B store",
-                phone = "12-3456-7890",
-                description = "The worst store ever",
-                locationLat = 0.15,
-                locationLng = -0.15
+            id = UUID.randomUUID(),
+            ownerId = UUID.randomUUID(),
+            name = "B store",
+            phone = "12-3456-7890",
+            description = "The worst store ever",
+            locationLat = 0.15,
+            locationLng = -0.15
         )
 
         given(storeRepository.findAll())
-                .willReturn(listOf(storeA, storeB))
+            .willReturn(listOf(storeA, storeB))
 
         mockMvc.perform(get("/stores").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("\$.[0].id").value(storeA.id!!.toString()))
-                .andExpect(jsonPath("\$.[0].ownerId").value(storeA.ownerId.toString()))
-                .andExpect(jsonPath("\$.[0].name").value(storeA.name))
-                .andExpect(jsonPath("\$.[1].id").value(storeB.id!!.toString()))
-                .andExpect(jsonPath("\$.[1].location.lat").value(storeB.locationLat))
-                .andExpect(jsonPath("\$.[1].location.lng").value(storeB.locationLng))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("\$.[0].id").value(storeA.id!!.toString()))
+            .andExpect(jsonPath("\$.[0].ownerId").value(storeA.ownerId.toString()))
+            .andExpect(jsonPath("\$.[0].name").value(storeA.name))
+            .andExpect(jsonPath("\$.[1].id").value(storeB.id!!.toString()))
+            .andExpect(jsonPath("\$.[1].location.lat").value(storeB.locationLat))
+            .andExpect(jsonPath("\$.[1].location.lng").value(storeB.locationLng))
     }
 }

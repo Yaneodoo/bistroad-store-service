@@ -6,7 +6,7 @@ import java.util.*
 
 @RestController
 class StoreController(
-        val storeService: StoreService
+    val storeService: StoreService
 ) {
     @GetMapping("/stores/{id}")
     fun getStore(@PathVariable id: UUID) = storeService.readStore(id)
