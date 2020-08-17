@@ -1,6 +1,7 @@
 package kr.bistroad.storeservice.store
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -35,7 +36,9 @@ class StoreController(
 
     @DeleteMapping("/stores/{id}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#id, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
-    fun deleteStore(@PathVariable id: UUID): Boolean {
-        return storeService.deleteStore(id)
-    }
+    fun deleteStore(@PathVariable id: UUID): ResponseEntity<Void> =
+        if (storeService.deleteStore(id))
+            ResponseEntity.noContent().build()
+        else
+            ResponseEntity.notFound().build()
 }
