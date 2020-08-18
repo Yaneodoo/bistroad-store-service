@@ -1,5 +1,6 @@
 package kr.bistroad.storeservice.store.item
 
+import kr.bistroad.storeservice.exception.StoreItemNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -12,7 +13,7 @@ class StoreItemController(
 ) {
     @GetMapping("/stores/{storeId}/items/{id}")
     fun getStoreItem(@PathVariable storeId: UUID, @PathVariable id: UUID) =
-        storeItemService.readStoreItem(storeId, id)
+        storeItemService.readStoreItem(storeId, id) ?: throw StoreItemNotFoundException()
 
     @GetMapping("/stores/{storeId}/items")
     fun getStoreItems(@PathVariable storeId: UUID) =

@@ -1,5 +1,6 @@
 package kr.bistroad.storeservice.store
 
+import kr.bistroad.storeservice.exception.StoreNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -49,7 +50,7 @@ class StoreService(
     }
 
     fun patchStore(id: UUID, dto: StoreDto.PatchReq): StoreDto.CruRes {
-        val store = storeRepository.findByIdOrNull(id) ?: error("Store not found")
+        val store = storeRepository.findByIdOrNull(id) ?: throw StoreNotFoundException()
 
         if (dto.ownerId != null) store.ownerId = dto.ownerId
         if (dto.name != null) store.name = dto.name

@@ -1,5 +1,6 @@
 package kr.bistroad.storeservice.store
 
+import kr.bistroad.storeservice.exception.StoreNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -11,7 +12,8 @@ class StoreController(
     val storeService: StoreService
 ) {
     @GetMapping("/stores/{id}")
-    fun getStore(@PathVariable id: UUID) = storeService.readStore(id)
+    fun getStore(@PathVariable id: UUID) =
+        storeService.readStore(id) ?: throw StoreNotFoundException()
 
     @GetMapping("/stores")
     fun getStores(dto: StoreDto.SearchReq) = storeService.searchStores(dto)

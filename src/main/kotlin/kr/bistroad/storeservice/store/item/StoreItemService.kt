@@ -1,5 +1,7 @@
 package kr.bistroad.storeservice.store.item
 
+import kr.bistroad.storeservice.exception.StoreItemNotFoundException
+import kr.bistroad.storeservice.exception.StoreNotFoundException
 import kr.bistroad.storeservice.store.StoreRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -11,7 +13,7 @@ class StoreItemService(
         private val storeItemRepository: StoreItemRepository
 ) {
     fun createStoreItem(storeId: UUID, dto: StoreItemDto.CreateReq): StoreItemDto.CruRes {
-        val store = storeRepository.findByIdOrNull(storeId) ?: error("Store not found")
+        val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
         val item = StoreItem(
                 name = dto.name,
@@ -49,7 +51,7 @@ class StoreItemService(
                 stars = original?.stars ?: 0.0
         ).apply {
             if (original == null) {
-                val store = storeRepository.findByIdOrNull(storeId) ?: error("Store not found")
+                val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
                 store.addMenuItem(this)
             }
         }
@@ -59,7 +61,7 @@ class StoreItemService(
     }
 
     fun patchStoreItem(storeId: UUID, id: UUID, dto: StoreItemDto.PatchReq): StoreItemDto.CruRes {
-        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: error("Store item not found")
+        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: throw StoreItemNotFoundException()
 
         if (dto.name != null) item.name = dto.name
         if (dto.description != null) item.description = dto.description
