@@ -1,35 +1,27 @@
 package kr.bistroad.storeservice.store
 
-import org.junit.jupiter.api.BeforeEach
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.junit.jupiter.api.Test
-import org.mockito.BDDMockito.given
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.context.WebApplicationContext
 import java.util.*
 
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-class StoreIntegrationTests(
-    private val ctx: WebApplicationContext
-) {
+class StoreIntegrationTests {
+    @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean
+    @MockkBean
     private lateinit var storeRepository: StoreRepository
-
-    @BeforeEach
-    fun setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build()
-    }
 
     @Test
     fun `Show a list of stores`() {
@@ -52,8 +44,7 @@ class StoreIntegrationTests(
             locationLng = -0.15
         )
 
-        given(storeRepository.findAll())
-            .willReturn(listOf(storeA, storeB))
+        every { storeRepository.findAll() } returns listOf(storeA, storeB)
 
         mockMvc.perform(get("/stores").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
