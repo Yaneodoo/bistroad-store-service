@@ -1,6 +1,7 @@
 package kr.bistroad.storeservice.store.item
 
 import kr.bistroad.storeservice.exception.StoreItemNotFoundException
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -16,8 +17,8 @@ class StoreItemController(
         storeItemService.readStoreItem(storeId, id) ?: throw StoreItemNotFoundException()
 
     @GetMapping("/stores/{storeId}/items")
-    fun getStoreItems(@PathVariable storeId: UUID) =
-        storeItemService.searchStoreItems(storeId)
+    fun getStoreItems(@PathVariable storeId: UUID, pageable: Pageable) =
+        storeItemService.searchStoreItems(storeId, pageable)
 
     @PostMapping("/stores/{storeId}/items")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")

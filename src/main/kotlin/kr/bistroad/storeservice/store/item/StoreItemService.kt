@@ -3,6 +3,7 @@ package kr.bistroad.storeservice.store.item
 import kr.bistroad.storeservice.exception.StoreItemNotFoundException
 import kr.bistroad.storeservice.exception.StoreNotFoundException
 import kr.bistroad.storeservice.store.StoreRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -34,21 +35,21 @@ class StoreItemService(
         return StoreItemDto.CruRes.fromEntity(item)
     }
 
-    fun searchStoreItems(storeId: UUID): List<StoreItemDto.CruRes> {
-        return storeItemRepository.findAllByStoreId(storeId)
-                .map(StoreItemDto.CruRes.Companion::fromEntity)
+    fun searchStoreItems(storeId: UUID, pageable: Pageable): List<StoreItemDto.CruRes> {
+        return storeItemRepository.search(storeId, pageable)
+            .content.map(StoreItemDto.CruRes.Companion::fromEntity)
     }
 
     fun putStoreItem(storeId: UUID, id: UUID, dto: StoreItemDto.PutReq): StoreItemDto.CruRes {
         val original = storeItemRepository.findByStoreIdAndId(storeId, id)
         val item = StoreItem(
-                id = id,
-                store = original?.store,
-                name = dto.name,
-                description = dto.description,
-                photoUri = original?.photoUri,
-                price = dto.price,
-                stars = original?.stars ?: 0.0
+            id = id,
+            store = original?.store,
+            name = dto.name,
+            description = dto.description,
+            photoUri = original?.photoUri,
+            price = dto.price,
+            stars = original?.stars ?: 0.0
         ).apply {
             if (original == null) {
                 val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
