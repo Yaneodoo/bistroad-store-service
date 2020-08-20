@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-interface StoreRepository : JpaRepository<Store, UUID> {
+interface StoreRepository : JpaRepository<Store, UUID>, StoreRepositoryCustom {
     fun findAllByOwnerId(ownerId: UUID): List<Store>
 
     @Transactional
