@@ -1,6 +1,7 @@
 package kr.bistroad.storeservice.store
 
 import kr.bistroad.storeservice.exception.StoreNotFoundException
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -27,12 +28,9 @@ class StoreService(
         return StoreDto.CruRes.fromEntity(store)
     }
 
-    fun searchStores(dto: StoreDto.SearchReq): List<StoreDto.CruRes> {
-        val stores = when {
-            dto.ownerId != null -> storeRepository.findAllByOwnerId(dto.ownerId)
-            else -> storeRepository.findAll()
-        }
-        return stores.map(StoreDto.CruRes.Companion::fromEntity)
+    fun searchStores(dto: StoreDto.SearchReq, pageable: Pageable): List<StoreDto.CruRes> {
+        return storeRepository.search(dto, pageable)
+            .content.map(StoreDto.CruRes.Companion::fromEntity)
     }
 
     fun putStore(id: UUID, dto: StoreDto.PutReq): StoreDto.CruRes {

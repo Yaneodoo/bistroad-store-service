@@ -1,6 +1,7 @@
 package kr.bistroad.storeservice.store
 
 import kr.bistroad.storeservice.exception.StoreNotFoundException
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -16,7 +17,7 @@ class StoreController(
         storeService.readStore(id) ?: throw StoreNotFoundException()
 
     @GetMapping("/stores")
-    fun getStores(dto: StoreDto.SearchReq) = storeService.searchStores(dto)
+    fun getStores(dto: StoreDto.SearchReq, pageable: Pageable) = storeService.searchStores(dto, pageable)
 
     @PostMapping("/stores")
     @PreAuthorize("isAuthenticated() and (( #dto.ownerId == principal.userId ) or hasRole('ROLE_ADMIN'))")
