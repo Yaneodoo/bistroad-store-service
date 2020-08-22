@@ -52,6 +52,8 @@ dependencies {
     api("com.querydsl:querydsl-jpa:4.3.1")
     kapt("com.querydsl:querydsl-apt:4.3.1:hibernate")
 
+    // Swagger
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
 }
 
 allOpen {
