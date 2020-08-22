@@ -24,6 +24,11 @@ class StoreController(
     @ApiOperation("\${swagger.doc.operation.store.get-stores.description}")
     fun getStores(dto: StoreDto.SearchReq, pageable: Pageable) = storeService.searchStores(dto, pageable)
 
+    @GetMapping("/stores/nearby")
+    @ApiOperation("\${swagger.doc.operation.store.get-nearby-stores.description}")
+    fun getNearbyStores(dto: StoreDto.SearchNearbyReq, pageable: Pageable) =
+        storeService.searchNearbyStores(dto, pageable)
+
     @PostMapping("/stores")
     @ApiOperation("\${swagger.doc.operation.store.post-store.description}")
     @PreAuthorize("isAuthenticated() and (( #dto.ownerId == principal.userId ) or hasRole('ROLE_ADMIN'))")

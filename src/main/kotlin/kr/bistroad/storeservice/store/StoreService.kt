@@ -33,6 +33,11 @@ class StoreService(
             .content.map(StoreDto.CruRes.Companion::fromEntity)
     }
 
+    fun searchNearbyStores(dto: StoreDto.SearchNearbyReq, pageable: Pageable): List<StoreDto.CruRes> {
+        return storeRepository.searchNearby(dto, pageable)
+            .content.map(StoreDto.CruRes.Companion::fromEntity)
+    }
+
     fun putStore(id: UUID, dto: StoreDto.PutReq): StoreDto.CruRes {
         val store = Store(
             id = id,

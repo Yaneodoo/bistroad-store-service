@@ -13,6 +13,8 @@ swagger:
           description: Get a store by ID
         get-stores:
           description: Search stores
+        get-nearby-stores:
+          description: Search nearby stores within a specific radius
         post-store:
           description: Create a store
         put-store:

@@ -1,5 +1,6 @@
 package kr.bistroad.storeservice.store
 
+import io.swagger.annotations.ApiModelProperty
 import java.util.*
 
 interface StoreDto {
@@ -14,7 +15,18 @@ interface StoreDto {
     }
 
     data class SearchReq(
-            val ownerId: UUID?
+        val ownerId: UUID?
+    )
+
+    data class SearchNearbyReq(
+        @ApiModelProperty(required = true)
+        val originLat: Double,
+
+        @ApiModelProperty(required = true)
+        val originLng: Double,
+
+        @ApiModelProperty(required = true)
+        val radius: Double
     )
 
     data class PutReq(
