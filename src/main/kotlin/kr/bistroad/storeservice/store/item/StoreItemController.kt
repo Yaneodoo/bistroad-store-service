@@ -1,7 +1,6 @@
 package kr.bistroad.storeservice.store.item
 
 import io.swagger.annotations.Api
-import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiOperation
 import kr.bistroad.storeservice.exception.StoreItemNotFoundException
 import org.springframework.data.domain.Pageable
@@ -28,10 +27,6 @@ class StoreItemController(
 
     @PostMapping("/stores/{storeId}/items")
     @ApiOperation("\${swagger.doc.operation.store-item.post-store-item.description}")
-    @ApiImplicitParam(
-        name = "Authorization", value = "Access Token", required = true, paramType = "header",
-        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
-    )
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(HttpStatus.CREATED)
     fun postStoreItem(@PathVariable storeId: UUID, @RequestBody dto: StoreItemDto.CreateReq) =
@@ -39,10 +34,6 @@ class StoreItemController(
 
     @PutMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.put-store-item.description}")
-    @ApiImplicitParam(
-        name = "Authorization", value = "Access Token", required = true, paramType = "header",
-        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
-    )
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun putStoreItem(
         @PathVariable storeId: UUID,
@@ -55,20 +46,12 @@ class StoreItemController(
 
     @PatchMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.patch-store-item.description}")
-    @ApiImplicitParam(
-        name = "Authorization", value = "Access Token", required = true, paramType = "header",
-        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
-    )
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun patchStoreItem(@PathVariable storeId: UUID, @PathVariable id: UUID, @RequestBody dto: StoreItemDto.PatchReq) =
         storeItemService.patchStoreItem(storeId, id, dto)
 
     @DeleteMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.delete-store-item.description}")
-    @ApiImplicitParam(
-        name = "Authorization", value = "Access Token", required = true, paramType = "header",
-        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
-    )
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun deleteStoreItem(@PathVariable storeId: UUID, @PathVariable id: UUID): ResponseEntity<Void> =
         if (storeItemService.deleteStoreItem(storeId, id))
