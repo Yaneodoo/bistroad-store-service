@@ -12,7 +12,7 @@ import java.util.*
 class StoreItemRepositoryImpl : QuerydslRepositorySupport(StoreItem::class.java), StoreItemRepositoryCustom {
     override fun search(storeId: UUID, pageable: Pageable): Page<StoreItem> {
         val query = from(storeItem)
-            .where(storeItem.id.eq(storeId))
+            .where(storeItem.store.id.eq(storeId))
 
         val list = querydsl!!.applyPagination(pageable, query).fetch()
         return PageImpl(list, pageable, query.fetchCount())
