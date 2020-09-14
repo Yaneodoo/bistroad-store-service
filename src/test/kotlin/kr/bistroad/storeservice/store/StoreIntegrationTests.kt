@@ -2,6 +2,8 @@ package kr.bistroad.storeservice.store
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import kr.bistroad.storeservice.store.domain.Store
+import kr.bistroad.storeservice.store.infrastructure.StoreRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc

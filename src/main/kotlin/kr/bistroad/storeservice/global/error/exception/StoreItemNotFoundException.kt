@@ -1,0 +1,7 @@
+package kr.bistroad.storeservice.global.error.exception
+
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseStatus
+
+@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Item not found")
+class StoreItemNotFoundException : RuntimeException()
