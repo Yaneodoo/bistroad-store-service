@@ -7,6 +7,7 @@ import java.util.*
 interface StoreItemDto {
     @ApiModel("Store Item Create Request")
     data class CreateReq(
+        val id: UUID?,
         val name: String,
         val description: String,
         val price: Double

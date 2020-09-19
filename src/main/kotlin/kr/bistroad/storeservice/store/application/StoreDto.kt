@@ -8,6 +8,7 @@ import java.util.*
 interface StoreDto {
     @ApiModel("Store Create Request")
     data class CreateReq(
+        val id: UUID?,
         val ownerId: UUID,
         val name: String,
         val phone: String,

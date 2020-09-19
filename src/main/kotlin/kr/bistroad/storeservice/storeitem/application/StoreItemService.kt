@@ -19,6 +19,7 @@ class StoreItemService(
         val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
         val item = StoreItem(
+                id = dto.id,
                 name = dto.name,
                 description = dto.description,
                 photoUri = null,
@@ -40,27 +41,6 @@ class StoreItemService(
     fun searchStoreItems(storeId: UUID, pageable: Pageable): List<StoreItemDto.CruRes> {
         return storeItemRepository.search(storeId, pageable)
             .content.map(StoreItemDto.CruRes.Companion::fromEntity)
-    }
-
-    fun putStoreItem(storeId: UUID, id: UUID, dto: StoreItemDto.PutReq): StoreItemDto.CruRes {
-        val original = storeItemRepository.findByStoreIdAndId(storeId, id)
-        val item = StoreItem(
-            id = id,
-            store = original?.store,
-            name = dto.name,
-            description = dto.description,
-            photoUri = original?.photoUri,
-            price = dto.price,
-            stars = original?.stars ?: 0.0
-        ).apply {
-            if (original == null) {
-                val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
-                store.addMenuItem(this)
-            }
-        }
-
-        storeItemRepository.save(item)
-        return StoreItemDto.CruRes.fromEntity(item)
     }
 
     fun patchStoreItem(storeId: UUID, id: UUID, dto: StoreItemDto.PatchReq): StoreItemDto.CruRes {

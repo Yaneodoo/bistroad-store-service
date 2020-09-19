@@ -42,8 +42,26 @@ class StoreItemController(
         @PathVariable id: UUID,
         @RequestBody dto: StoreItemDto.PutReq
     ): ResponseEntity<StoreItemDto.CruRes> {
-        val status = if (storeItemService.readStoreItem(storeId, id) == null) HttpStatus.CREATED else HttpStatus.OK
-        return ResponseEntity(storeItemService.putStoreItem(storeId, id, dto), status)
+        return if (storeItemService.readStoreItem(storeId, id) == null) {
+            ResponseEntity(
+                storeItemService.createStoreItem(storeId, StoreItemDto.CreateReq(
+                    id = id,
+                    name = dto.name,
+                    description = dto.description,
+                    price = dto.price
+                )),
+                HttpStatus.CREATED
+            )
+        } else {
+            ResponseEntity(
+                storeItemService.patchStoreItem(storeId, id, StoreItemDto.PatchReq(
+                    name = dto.name,
+                    description = dto.description,
+                    price = dto.price
+                )),
+                HttpStatus.OK
+            )
+        }
     }
 
     @PatchMapping("/stores/{storeId}/items/{id}")

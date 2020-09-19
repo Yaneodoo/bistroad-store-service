@@ -41,8 +41,34 @@ class StoreController(
     @ApiOperation("\${swagger.doc.operation.store.put-store.description}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#id, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun putStore(@PathVariable id: UUID, @RequestBody dto: StoreDto.PutReq): ResponseEntity<StoreDto.CruRes> {
-        val status = if (storeService.readStore(id) == null) HttpStatus.CREATED else HttpStatus.OK
-        return ResponseEntity(storeService.putStore(id, dto), status)
+        return if (storeService.readStore(id) == null) {
+            ResponseEntity(
+                storeService.createStore(
+                    StoreDto.CreateReq(
+                        id = id,
+                        ownerId = dto.ownerId,
+                        name = dto.name,
+                        phone = dto.phone,
+                        description = dto.description,
+                        location = StoreDto.CreateReq.Location(
+                            lat = dto.location.lat,
+                            lng = dto.location.lng
+                        )
+                    )
+                ), HttpStatus.CREATED
+            )
+        } else {
+            ResponseEntity(storeService.patchStore(id, StoreDto.PatchReq(
+                ownerId = dto.ownerId,
+                name = dto.name,
+                phone = dto.phone,
+                description = dto.description,
+                location = StoreDto.PatchReq.Location(
+                    lat = dto.location.lat,
+                    lng = dto.location.lng
+                )
+            )), HttpStatus.OK)
+        }
     }
 
     @PatchMapping("/stores/{id}")

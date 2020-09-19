@@ -14,6 +14,7 @@ class StoreService(
 ) {
     fun createStore(dto: StoreDto.CreateReq): StoreDto.CruRes {
         val store = Store(
+            id = dto.id,
             ownerId = dto.ownerId,
             name = dto.name,
             phone = dto.phone,
@@ -38,20 +39,6 @@ class StoreService(
     fun searchNearbyStores(dto: StoreDto.SearchNearbyReq, pageable: Pageable): List<StoreDto.CruRes> {
         return storeRepository.searchNearby(dto, pageable)
             .content.map(StoreDto.CruRes.Companion::fromEntity)
-    }
-
-    fun putStore(id: UUID, dto: StoreDto.PutReq): StoreDto.CruRes {
-        val store = Store(
-            id = id,
-            ownerId = dto.ownerId,
-            name = dto.name,
-            phone = dto.phone,
-            description = dto.description,
-            locationLat = dto.location.lat,
-            locationLng = dto.location.lng
-        )
-        storeRepository.save(store)
-        return StoreDto.CruRes.fromEntity(store)
     }
 
     fun patchStore(id: UUID, dto: StoreDto.PatchReq): StoreDto.CruRes {
