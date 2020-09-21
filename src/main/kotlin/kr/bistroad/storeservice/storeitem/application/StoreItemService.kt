@@ -15,7 +15,7 @@ class StoreItemService(
     private val storeRepository: StoreRepository,
     private val storeItemRepository: StoreItemRepository
 ) {
-    fun createStoreItem(storeId: UUID, dto: StoreItemDto.CreateReq): StoreItemDto.CruRes {
+    fun createStoreItem(storeId: UUID, dto: StoreItemDto.ForCreate): StoreItemDto.ForResult {
         val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
         val item = StoreItem(
@@ -30,20 +30,20 @@ class StoreItemService(
         }
 
         storeItemRepository.save(item)
-        return StoreItemDto.CruRes.fromEntity(item)
+        return StoreItemDto.ForResult.fromEntity(item)
     }
 
-    fun readStoreItem(storeId: UUID, id: UUID): StoreItemDto.CruRes? {
+    fun readStoreItem(storeId: UUID, id: UUID): StoreItemDto.ForResult? {
         val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: return null
-        return StoreItemDto.CruRes.fromEntity(item)
+        return StoreItemDto.ForResult.fromEntity(item)
     }
 
-    fun searchStoreItems(storeId: UUID, pageable: Pageable): List<StoreItemDto.CruRes> {
+    fun searchStoreItems(storeId: UUID, pageable: Pageable): List<StoreItemDto.ForResult> {
         return storeItemRepository.search(storeId, pageable)
-            .content.map(StoreItemDto.CruRes.Companion::fromEntity)
+            .content.map(StoreItemDto.ForResult.Companion::fromEntity)
     }
 
-    fun patchStoreItem(storeId: UUID, id: UUID, dto: StoreItemDto.PatchReq): StoreItemDto.CruRes {
+    fun updateStoreItem(storeId: UUID, id: UUID, dto: StoreItemDto.ForUpdate): StoreItemDto.ForResult {
         val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: throw StoreItemNotFoundException()
 
         if (dto.name != null) item.name = dto.name
@@ -51,7 +51,7 @@ class StoreItemService(
         if (dto.price != null) item.price = dto.price
 
         storeItemRepository.save(item)
-        return StoreItemDto.CruRes.fromEntity(item)
+        return StoreItemDto.ForResult.fromEntity(item)
     }
 
     fun deleteStoreItem(storeId: UUID, id: UUID): Boolean {

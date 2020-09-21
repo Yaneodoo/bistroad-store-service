@@ -5,40 +5,31 @@ import kr.bistroad.storeservice.storeitem.domain.StoreItem
 import java.util.*
 
 interface StoreItemDto {
-    @ApiModel("Store Item Create Request")
-    data class CreateReq(
-        val id: UUID?,
+    data class ForCreate(
+        val id: UUID? = null,
         val name: String,
         val description: String,
         val price: Double
-    )
+    ) : StoreItemDto
 
-    @ApiModel("Store Item Put Request")
-    data class PutReq(
-        val name: String,
-        val description: String,
-        val price: Double
-    )
-
-    @ApiModel("Store Item Patch Request")
-    data class PatchReq(
-        val name: String?,
-        val description: String?,
-        val price: Double?
-    )
+    data class ForUpdate(
+        val name: String? = null,
+        val description: String? = null,
+        val price: Double? = null
+    ) : StoreItemDto
 
     @ApiModel("Store Item Response")
-    data class CruRes(
+    data class ForResult(
         val id: UUID,
         val storeId: UUID,
         val name: String,
         val description: String,
         val price: Double,
-        val photoUri: String?,
+        val photoUri: String? = null,
         val stars: Double
-    ) {
+    ) : StoreItemDto {
         companion object {
-            fun fromEntity(item: StoreItem) = CruRes(
+            fun fromEntity(item: StoreItem) = ForResult(
                 id = item.id!!,
                 storeId = item.store!!.id!!,
                 name = item.name,

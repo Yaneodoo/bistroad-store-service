@@ -31,7 +31,7 @@ class StoreItemController(
     @ApiOperation("\${swagger.doc.operation.store-item.post-store-item.description}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(HttpStatus.CREATED)
-    fun postStoreItem(@PathVariable storeId: UUID, @RequestBody dto: StoreItemDto.CreateReq) =
+    fun postStoreItem(@PathVariable storeId: UUID, @RequestBody dto: StoreItemDto.ForCreate) =
         storeItemService.createStoreItem(storeId, dto)
 
     @PutMapping("/stores/{storeId}/items/{id}")
@@ -40,42 +40,34 @@ class StoreItemController(
     fun putStoreItem(
         @PathVariable storeId: UUID,
         @PathVariable id: UUID,
-        @RequestBody dto: StoreItemDto.PutReq
-    ): ResponseEntity<StoreItemDto.CruRes> {
-        return if (storeItemService.readStoreItem(storeId, id) == null) {
-            ResponseEntity(
-                storeItemService.createStoreItem(storeId, StoreItemDto.CreateReq(
-                    id = id,
-                    name = dto.name,
-                    description = dto.description,
-                    price = dto.price
-                )),
-                HttpStatus.CREATED
-            )
+        @RequestBody body: StoreItemRequest.PutBody
+    ) =
+        if (storeItemService.readStoreItem(storeId, id) == null) {
+            with(storeItemService.createStoreItem(storeId, body.toDtoForCreate(id))) {
+                ResponseEntity(this, HttpStatus.CREATED)
+            }
         } else {
-            ResponseEntity(
-                storeItemService.patchStoreItem(storeId, id, StoreItemDto.PatchReq(
-                    name = dto.name,
-                    description = dto.description,
-                    price = dto.price
-                )),
-                HttpStatus.OK
-            )
+            with(storeItemService.updateStoreItem(storeId, id, body.toDtoForUpdate())) {
+                ResponseEntity(this, HttpStatus.OK)
+            }
         }
-    }
 
     @PatchMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.patch-store-item.description}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
-    fun patchStoreItem(@PathVariable storeId: UUID, @PathVariable id: UUID, @RequestBody dto: StoreItemDto.PatchReq) =
-        storeItemService.patchStoreItem(storeId, id, dto)
+    fun patchStoreItem(
+        @PathVariable storeId: UUID,
+        @PathVariable id: UUID,
+        @RequestBody dto: StoreItemDto.ForUpdate
+    ) =
+        storeItemService.updateStoreItem(storeId, id, dto)
 
     @DeleteMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.delete-store-item.description}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
-    fun deleteStoreItem(@PathVariable storeId: UUID, @PathVariable id: UUID): ResponseEntity<Void> =
-        if (storeItemService.deleteStoreItem(storeId, id))
-            ResponseEntity.noContent().build()
-        else
-            ResponseEntity.notFound().build()
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteStoreItem(@PathVariable storeId: UUID, @PathVariable id: UUID) {
+        val deleted = storeItemService.deleteStoreItem(storeId, id)
+        if (!deleted) throw StoreItemNotFoundException()
+    }
 }

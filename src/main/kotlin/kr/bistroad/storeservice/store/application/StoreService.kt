@@ -12,7 +12,7 @@ import java.util.*
 class StoreService(
     private val storeRepository: StoreRepository
 ) {
-    fun createStore(dto: StoreDto.CreateReq): StoreDto.CruRes {
+    fun createStore(dto: StoreDto.ForCreate): StoreDto.ForResult {
         val store = Store(
             id = dto.id,
             ownerId = dto.ownerId,
@@ -23,25 +23,40 @@ class StoreService(
             locationLng = dto.location.lng
         )
         storeRepository.save(store)
-        return StoreDto.CruRes.fromEntity(store)
+        return StoreDto.ForResult.fromEntity(store)
     }
 
-    fun readStore(id: UUID): StoreDto.CruRes? {
+    fun readStore(id: UUID): StoreDto.ForResult? {
         val store = storeRepository.findByIdOrNull(id) ?: return null
-        return StoreDto.CruRes.fromEntity(store)
+        return StoreDto.ForResult.fromEntity(store)
     }
 
-    fun searchStores(dto: StoreDto.SearchReq, pageable: Pageable): List<StoreDto.CruRes> {
-        return storeRepository.search(dto, pageable)
-            .content.map(StoreDto.CruRes.Companion::fromEntity)
+    fun searchStores(
+        ownerId: UUID?,
+        pageable: Pageable
+    ): List<StoreDto.ForResult> =
+        storeRepository.search(
+            ownerId = ownerId,
+            pageable = pageable
+        ).content
+            .map(StoreDto.ForResult.Companion::fromEntity)
+
+    fun searchNearbyStores(
+        originLat: Double,
+        originLng: Double,
+        radius: Double,
+        pageable: Pageable
+    ): List<StoreDto.ForResult> {
+        return storeRepository.searchNearby(
+            originLat = originLat,
+            originLng = originLng,
+            radius = radius,
+            pageable = pageable
+        ).content
+            .map(StoreDto.ForResult.Companion::fromEntity)
     }
 
-    fun searchNearbyStores(dto: StoreDto.SearchNearbyReq, pageable: Pageable): List<StoreDto.CruRes> {
-        return storeRepository.searchNearby(dto, pageable)
-            .content.map(StoreDto.CruRes.Companion::fromEntity)
-    }
-
-    fun patchStore(id: UUID, dto: StoreDto.PatchReq): StoreDto.CruRes {
+    fun updateStore(id: UUID, dto: StoreDto.ForUpdate): StoreDto.ForResult {
         val store = storeRepository.findByIdOrNull(id) ?: throw StoreNotFoundException()
 
         if (dto.ownerId != null) store.ownerId = dto.ownerId
@@ -52,7 +67,7 @@ class StoreService(
         if (dto.location?.lng != null) store.locationLng = dto.location.lng
 
         storeRepository.save(store)
-        return StoreDto.CruRes.fromEntity(store)
+        return StoreDto.ForResult.fromEntity(store)
     }
 
     fun deleteStore(id: UUID): Boolean {
