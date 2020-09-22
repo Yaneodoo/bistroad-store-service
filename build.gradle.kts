@@ -23,6 +23,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    testImplementation("io.kotest:kotest-assertions-core:4.2.2")
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
