@@ -19,7 +19,6 @@ class StoreItemService(
         val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
         val item = StoreItem(
-                id = dto.id,
                 name = dto.name,
                 description = dto.description,
                 photoUri = null,

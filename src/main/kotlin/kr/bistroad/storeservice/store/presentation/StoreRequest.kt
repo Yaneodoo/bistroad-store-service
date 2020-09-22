@@ -47,40 +47,6 @@ interface StoreRequest {
             )
     }
 
-    @ApiModel("Store Put Request Body")
-    data class PutBody(
-        val ownerId: UUID,
-        val name: String,
-        val phone: String,
-        val description: String,
-        val location: Location
-    ) {
-        fun toDtoForCreate(id: UUID): StoreDto.ForCreate =
-            StoreDto.ForCreate(
-                id = id,
-                ownerId = ownerId,
-                name = name,
-                phone = phone,
-                description = description,
-                location = StoreDto.ForCreate.Location(
-                    lat = location.lat,
-                    lng = location.lng
-                )
-            )
-
-        fun toDtoForUpdate(): StoreDto.ForUpdate =
-            StoreDto.ForUpdate(
-                ownerId = ownerId,
-                name = name,
-                phone = phone,
-                description = description,
-                location = StoreDto.ForUpdate.Location(
-                    lat = location.lat,
-                    lng = location.lng
-                )
-            )
-    }
-
     @ApiModel("Store Patch Request Body")
     data class PatchBody(
         val ownerId: UUID? = null,

@@ -6,7 +6,6 @@ import java.util.*
 
 interface StoreItemDto {
     data class ForCreate(
-        val id: UUID? = null,
         val name: String,
         val description: String,
         val price: Double

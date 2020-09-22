@@ -14,7 +14,6 @@ class StoreService(
 ) {
     fun createStore(dto: StoreDto.ForCreate): StoreDto.ForResult {
         val store = Store(
-            id = dto.id,
             ownerId = dto.ownerId,
             name = dto.name,
             phone = dto.phone,

@@ -6,7 +6,6 @@ import java.util.*
 
 interface StoreDto {
     data class ForCreate(
-        val id: UUID? = null,
         val ownerId: UUID,
         val name: String,
         val phone: String,

@@ -7,7 +7,6 @@ import kr.bistroad.storeservice.storeitem.application.StoreItemDto
 import kr.bistroad.storeservice.storeitem.application.StoreItemService
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -33,24 +32,6 @@ class StoreItemController(
     @ResponseStatus(HttpStatus.CREATED)
     fun postStoreItem(@PathVariable storeId: UUID, @RequestBody dto: StoreItemDto.ForCreate) =
         storeItemService.createStoreItem(storeId, dto)
-
-    @PutMapping("/stores/{storeId}/items/{id}")
-    @ApiOperation("\${swagger.doc.operation.store-item.put-store-item.description}")
-    @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
-    fun putStoreItem(
-        @PathVariable storeId: UUID,
-        @PathVariable id: UUID,
-        @RequestBody body: StoreItemRequest.PutBody
-    ) =
-        if (storeItemService.readStoreItem(storeId, id) == null) {
-            with(storeItemService.createStoreItem(storeId, body.toDtoForCreate(id))) {
-                ResponseEntity(this, HttpStatus.CREATED)
-            }
-        } else {
-            with(storeItemService.updateStoreItem(storeId, id, body.toDtoForUpdate())) {
-                ResponseEntity(this, HttpStatus.OK)
-            }
-        }
 
     @PatchMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.patch-store-item.description}")

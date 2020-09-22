@@ -6,7 +6,6 @@ import kr.bistroad.storeservice.global.error.exception.StoreNotFoundException
 import kr.bistroad.storeservice.store.application.StoreService
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -45,20 +44,6 @@ class StoreController(
     @ResponseStatus(HttpStatus.CREATED)
     fun postStore(@RequestBody body: StoreRequest.PostBody) =
         storeService.createStore(body.toDtoForCreate())
-
-    @PutMapping("/stores/{id}")
-    @ApiOperation("\${swagger.doc.operation.store.put-store.description}")
-    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or hasPermission(#id, 'Store', 'write') )")
-    fun putStore(@PathVariable id: UUID, @RequestBody body: StoreRequest.PutBody) =
-        if (storeService.readStore(id) == null) {
-            with(storeService.createStore(body.toDtoForCreate(id))) {
-                ResponseEntity(this, HttpStatus.CREATED)
-            }
-        } else {
-            with (storeService.updateStore(id, body.toDtoForUpdate())) {
-                ResponseEntity(this, HttpStatus.OK)
-            }
-        }
 
     @PatchMapping("/stores/{id}")
     @ApiOperation("\${swagger.doc.operation.store.patch-store.description}")

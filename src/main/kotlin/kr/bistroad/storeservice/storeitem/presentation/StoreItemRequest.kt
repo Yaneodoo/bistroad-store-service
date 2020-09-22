@@ -19,28 +19,6 @@ interface StoreItemRequest {
             )
     }
 
-    @ApiModel("Store Item Put Body")
-    data class PutBody(
-        val name: String,
-        val description: String,
-        val price: Double
-    ) {
-        fun toDtoForCreate(id: UUID): StoreItemDto.ForCreate =
-            StoreItemDto.ForCreate(
-                id = id,
-                name = name,
-                description = description,
-                price = price
-            )
-
-        fun toDtoForUpdate(): StoreItemDto.ForUpdate =
-            StoreItemDto.ForUpdate(
-                name = name,
-                description = description,
-                price = price
-            )
-    }
-
     @ApiModel("Store Item Patch Body")
     data class PatchBody(
         val name: String?,
