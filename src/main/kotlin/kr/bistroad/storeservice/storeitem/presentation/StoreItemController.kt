@@ -3,7 +3,6 @@ package kr.bistroad.storeservice.storeitem.presentation
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import kr.bistroad.storeservice.global.error.exception.StoreItemNotFoundException
-import kr.bistroad.storeservice.storeitem.application.StoreItemDto
 import kr.bistroad.storeservice.storeitem.application.StoreItemService
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -30,8 +29,8 @@ class StoreItemController(
     @ApiOperation("\${swagger.doc.operation.store-item.post-store-item.description}")
     @PreAuthorize("isAuthenticated() and (( hasPermission(#storeId, 'Store', 'write') ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(HttpStatus.CREATED)
-    fun postStoreItem(@PathVariable storeId: UUID, @RequestBody dto: StoreItemDto.ForCreate) =
-        storeItemService.createStoreItem(storeId, dto)
+    fun postStoreItem(@PathVariable storeId: UUID, @RequestBody body: StoreItemRequest.PostBody) =
+        storeItemService.createStoreItem(storeId, body.toDtoForCreate())
 
     @PatchMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.patch-store-item.description}")
@@ -39,9 +38,9 @@ class StoreItemController(
     fun patchStoreItem(
         @PathVariable storeId: UUID,
         @PathVariable id: UUID,
-        @RequestBody dto: StoreItemDto.ForUpdate
+        @RequestBody body: StoreItemRequest.PatchBody
     ) =
-        storeItemService.updateStoreItem(storeId, id, dto)
+        storeItemService.updateStoreItem(storeId, id, body.toDtoForUpdate())
 
     @DeleteMapping("/stores/{storeId}/items/{id}")
     @ApiOperation("\${swagger.doc.operation.store-item.delete-store-item.description}")

@@ -2,7 +2,6 @@ package kr.bistroad.storeservice.storeitem.presentation
 
 import io.swagger.annotations.ApiModel
 import kr.bistroad.storeservice.storeitem.application.StoreItemDto
-import java.util.*
 
 interface StoreItemRequest {
     @ApiModel("Store Item Create Body")
@@ -21,9 +20,9 @@ interface StoreItemRequest {
 
     @ApiModel("Store Item Patch Body")
     data class PatchBody(
-        val name: String?,
-        val description: String?,
-        val price: Double?
+        val name: String? = null,
+        val description: String? = null,
+        val price: Double? = null
     ) {
         fun toDtoForUpdate(): StoreItemDto.ForUpdate =
             StoreItemDto.ForUpdate(
