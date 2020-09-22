@@ -54,7 +54,11 @@ class StoreItemService(
     }
 
     fun deleteStoreItem(storeId: UUID, id: UUID): Boolean {
-        val numDeleted = storeItemRepository.removeByStoreIdAndId(storeId, id)
-        return numDeleted > 0
+        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: return false
+        val store = item.store!!
+
+        store.removeMenuItem(item)
+        storeRepository.save(store)
+        return true
     }
 }

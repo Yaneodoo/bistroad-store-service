@@ -37,6 +37,6 @@ class Store(
 
     fun removeMenuItem(item: StoreItem) {
         item.store = null
-        _menuItems += item
+        _menuItems -= item
     }
 }
