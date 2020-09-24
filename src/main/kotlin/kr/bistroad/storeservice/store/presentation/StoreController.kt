@@ -41,7 +41,7 @@ class StoreController(
 
     @PostMapping("/stores")
     @ApiOperation("\${swagger.doc.operation.store.post-store.description}")
-    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or ( #dto.ownerId == principal.userId ) )")
+    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or ( #body.ownerId == principal.userId ) )")
     @ResponseStatus(HttpStatus.CREATED)
     fun postStore(@RequestBody body: StoreRequest.PostBody) =
         storeService.createStore(body.toDtoForCreate())
