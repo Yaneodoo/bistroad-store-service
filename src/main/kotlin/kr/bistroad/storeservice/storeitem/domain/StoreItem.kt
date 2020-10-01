@@ -1,23 +1,15 @@
 package kr.bistroad.storeservice.storeitem.domain
 
-import kr.bistroad.storeservice.store.domain.Store
-import org.hibernate.annotations.GenericGenerator
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
-import javax.persistence.*
 
-@Entity
-@Table(name = "store_items")
-class StoreItem(
+@Document("store_items")
+data class StoreItem(
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    val id: UUID? = null,
+    val id: UUID = UUID.randomUUID(),
 
-    @ManyToOne
-    @JoinColumn(name = "storeId")
-    var store: Store? = null,
-
+    var store: StoreOfItem,
     var name: String,
     var description: String,
     var photoUri: String?,

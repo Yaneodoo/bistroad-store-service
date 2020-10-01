@@ -29,8 +29,8 @@ interface StoreItemDto {
     ) : StoreItemDto {
         companion object {
             fun fromEntity(item: StoreItem) = ForResult(
-                id = item.id!!,
-                storeId = item.store!!.id!!,
+                id = item.id,
+                storeId = item.store.id,
                 name = item.name,
                 description = item.description,
                 photoUri = item.photoUri,

@@ -1,42 +1,23 @@
 package kr.bistroad.storeservice.store.domain
 
-import kr.bistroad.storeservice.storeitem.domain.StoreItem
-import org.hibernate.annotations.GenericGenerator
+import kr.bistroad.storeservice.global.domain.Coordinate
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed
+import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
-import javax.persistence.*
 
-@Entity
-@Table(name = "stores")
-class Store(
+@Document("stores")
+data class Store(
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    val id: UUID? = null,
+    val id: UUID = UUID.randomUUID(),
 
-    @OneToMany(mappedBy = "store", cascade = [CascadeType.ALL], orphanRemoval = true)
-    @Column(name = "menuItems")
-    val _menuItems: MutableList<StoreItem> = mutableListOf(),
-
-    @Column(columnDefinition = "BINARY(16)")
     var ownerId: UUID,
 
     var name: String,
     var phone: String,
     var description: String,
-    var locationLat: Double,
-    var locationLng: Double
-) {
-    val menuItems: Collection<StoreItem>
-        get() = _menuItems
 
-    fun addMenuItem(item: StoreItem) {
-        item.store = this
-        _menuItems += item
-    }
-
-    fun removeMenuItem(item: StoreItem) {
-        item.store = null
-        _menuItems -= item
-    }
-}
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    var location: Coordinate
+)

@@ -1,52 +1,47 @@
 package kr.bistroad.storeservice.store.infrastructure
 
-import com.querydsl.core.BooleanBuilder
-import com.querydsl.core.types.dsl.NumberExpression
-import kr.bistroad.storeservice.store.domain.QStore.store
+import kr.bistroad.storeservice.global.domain.Coordinate
+import kr.bistroad.storeservice.global.util.toPage
 import kr.bistroad.storeservice.store.domain.Store
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
+import org.springframework.data.geo.GeoResult
+import org.springframework.data.geo.Metrics
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.find
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.query.NearQuery
+import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.query.where
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class StoreRepositoryImpl : QuerydslRepositorySupport(Store::class.java), StoreRepositoryCustom {
+class StoreRepositoryImpl(
+    private val mongoTemplate: MongoTemplate
+) : StoreRepositoryCustom {
     override fun search(
         ownerId: UUID?,
         pageable: Pageable
     ): Page<Store> {
-        val booleanBuilder = BooleanBuilder()
-        if (ownerId != null) booleanBuilder.and(store.ownerId.eq(ownerId))
+        val query = Query()
+        if (ownerId != null) query.addCriteria(where(Store::ownerId).`is`(ownerId))
 
-        val query = from(store)
-            .where(booleanBuilder)
-
-        val list = querydsl!!.applyPagination(pageable, query).fetch()
-        return PageImpl(list, pageable, query.fetchCount())
+        return mongoTemplate.find<Store>(query.with(pageable)).toPage(pageable)
     }
 
     override fun searchNearby(
-        originLat: Double,
-        originLng: Double,
-        radius: Double,
+        origin: Coordinate,
+        distance: Double,
         pageable: Pageable
-    ): Page<Store> {
-        val query = from(store)
-            .where(
-                dist2(originLat, originLng).lt(radius * radius)
-            )
-
-        val list = querydsl!!.applyPagination(pageable, query).fetch()
-        return PageImpl(list, pageable, query.fetchCount())
-    }
-
-    private fun dist2(originLat: Double, originLng: Double): NumberExpression<Double> {
-        val latDiff = store.locationLat.subtract(originLat)
-        val lngDiff = store.locationLng.subtract(originLng)
-
-        return latDiff.multiply(latDiff)
-            .add(lngDiff.multiply(lngDiff))
+    ): Page<GeoResult<Store>> {
+        val query = NearQuery
+            .near(GeoJsonPoint(origin.lng, origin.lat))
+            .maxDistance(distance / 1000, Metrics.KILOMETERS)
+            .with(pageable)
+        val result = mongoTemplate.query(Store::class.java)
+            .near(query)
+            .all()
+        return result.content.toPage(pageable)
     }
 }

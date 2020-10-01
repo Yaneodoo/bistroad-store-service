@@ -61,10 +61,12 @@ interface StoreRequest {
                 name = name,
                 phone = phone,
                 description = description,
-                location = StoreDto.ForUpdate.Location(
-                    lat = location?.lat,
-                    lng = location?.lng
-                )
+                location = location?.let {
+                    StoreDto.ForUpdate.Location(
+                        lat = location.lat,
+                        lng = location.lng
+                    )
+                }
             )
     }
 }

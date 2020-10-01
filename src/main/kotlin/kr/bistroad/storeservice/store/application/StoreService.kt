@@ -1,5 +1,6 @@
 package kr.bistroad.storeservice.store.application
 
+import kr.bistroad.storeservice.global.domain.Coordinate
 import kr.bistroad.storeservice.global.error.exception.StoreNotFoundException
 import kr.bistroad.storeservice.store.domain.Store
 import kr.bistroad.storeservice.store.infrastructure.StoreRepository
@@ -18,8 +19,7 @@ class StoreService(
             name = dto.name,
             phone = dto.phone,
             description = dto.description,
-            locationLat = dto.location.lat,
-            locationLng = dto.location.lng
+            location = Coordinate(dto.location.lat, dto.location.lng)
         )
         storeRepository.save(store)
         return StoreDto.ForResult.fromEntity(store)
@@ -45,15 +45,13 @@ class StoreService(
         originLng: Double,
         radius: Double,
         pageable: Pageable
-    ): List<StoreDto.ForResult> {
-        return storeRepository.searchNearby(
-            originLat = originLat,
-            originLng = originLng,
-            radius = radius,
+    ): List<StoreDto.ForNearbyResult> =
+        storeRepository.searchNearby(
+            origin = Coordinate(lat = originLat, lng = originLng),
+            distance = radius,
             pageable = pageable
         ).content
-            .map(StoreDto.ForResult.Companion::fromEntity)
-    }
+            .map(StoreDto.ForNearbyResult.Companion::fromEntity)
 
     fun updateStore(id: UUID, dto: StoreDto.ForUpdate): StoreDto.ForResult {
         val store = storeRepository.findByIdOrNull(id) ?: throw StoreNotFoundException()
@@ -62,8 +60,7 @@ class StoreService(
         if (dto.name != null) store.name = dto.name
         if (dto.phone != null) store.phone = dto.phone
         if (dto.description != null) store.description = dto.description
-        if (dto.location?.lat != null) store.locationLat = dto.location.lat
-        if (dto.location?.lng != null) store.locationLng = dto.location.lng
+        if (dto.location != null) store.location = Coordinate(dto.location.lat, dto.location.lng)
 
         storeRepository.save(store)
         return StoreDto.ForResult.fromEntity(store)

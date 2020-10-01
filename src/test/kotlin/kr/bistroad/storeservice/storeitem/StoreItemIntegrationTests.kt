@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.shouldBe
+import kr.bistroad.storeservice.global.domain.Coordinate
 import kr.bistroad.storeservice.store.domain.Store
 import kr.bistroad.storeservice.store.infrastructure.StoreRepository
 import kr.bistroad.storeservice.storeitem.domain.StoreItem
 import kr.bistroad.storeservice.storeitem.infrastructure.StoreItemRepository
 import kr.bistroad.storeservice.storeitem.presentation.StoreItemRequest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -17,12 +19,11 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import kr.bistroad.storeservice.storeitem.domain.StoreOfItem as StoreItemStore
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class StoreItemIntegrationTests {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -35,6 +36,12 @@ class StoreItemIntegrationTests {
 
     private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
 
+    @AfterEach
+    fun clear() {
+        storeRepository.deleteAll()
+        storeItemRepository.deleteAll()
+    }
+
     @Test
     fun `Gets an item`() {
         val store = Store(
@@ -42,19 +49,19 @@ class StoreItemIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.1,
-            locationLng = 0.1
+            location = Coordinate(0.1, 0.1)
         )
         val item = StoreItem(
+            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
             name = "Example",
             description = "example description",
             photoUri = null,
             price = 1000.0,
             stars = 4.5
         )
-        store.addMenuItem(item)
 
         storeRepository.save(store)
+        storeItemRepository.save(item)
 
         mockMvc.perform(
             get("/stores/${store.id}/items/${item.id}")
@@ -74,19 +81,18 @@ class StoreItemIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.1,
-            locationLng = 0.1
+            location = Coordinate(0.1, 0.1)
         )
         val storeB = Store(
             ownerId = UUID.randomUUID(),
             name = "B store",
             phone = "02-987-6543",
             description = "The worst store ever",
-            locationLat = 0.15,
-            locationLng = -0.15
+            location = Coordinate(0.15, -0.15)
         )
 
         val itemA1 = StoreItem(
+            store = StoreItemStore(id = storeA.id, ownerId = storeA.ownerId),
             name = "Apple",
             description = "example description",
             photoUri = null,
@@ -94,6 +100,7 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemA2 = StoreItem(
+            store = StoreItemStore(id = storeA.id, ownerId = storeA.ownerId),
             name = "Banana",
             description = "example description",
             photoUri = null,
@@ -101,6 +108,7 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemA3 = StoreItem(
+            store = StoreItemStore(id = storeA.id, ownerId = storeA.ownerId),
             name = "Peach",
             description = "example description",
             photoUri = null,
@@ -108,19 +116,20 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemB1 = StoreItem(
+            store = StoreItemStore(id = storeB.id, ownerId = storeB.ownerId),
             name = "Steak",
             description = "example description",
             photoUri = null,
             price = 10000.0,
             stars = 4.5
         )
-        storeA.addMenuItem(itemA1)
-        storeA.addMenuItem(itemA2)
-        storeA.addMenuItem(itemA3)
-        storeB.addMenuItem(itemB1)
 
         storeRepository.save(storeA)
         storeRepository.save(storeB)
+        storeItemRepository.save(itemA1)
+        storeItemRepository.save(itemA2)
+        storeItemRepository.save(itemA3)
+        storeItemRepository.save(itemB1)
 
         mockMvc.perform(
             get("/stores/${storeA.id}/items?sort=price,desc")
@@ -139,8 +148,7 @@ class StoreItemIntegrationTests {
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.1,
-            locationLng = 0.1
+            location = Coordinate(0.1, 0.1)
         )
         val body = StoreItemRequest.PostBody(
             name = "Apple",
@@ -171,22 +179,22 @@ class StoreItemIntegrationTests {
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.1,
-            locationLng = 0.1
+            location = Coordinate(0.1, 0.1)
         )
         val item = StoreItem(
+            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
             name = "Apple",
             description = "example description",
             photoUri = null,
             price = 2000.0,
             stars = 4.5
         )
-        store.addMenuItem(item)
         val body = StoreItemRequest.PatchBody(
             price = 1500.0
         )
 
         storeRepository.save(store)
+        storeItemRepository.save(item)
 
         mockMvc.perform(
             patch("/stores/${store.id}/items/${item.id}")
@@ -198,7 +206,7 @@ class StoreItemIntegrationTests {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.id").value(item.id.toString()))
             .andExpect(jsonPath("\$.name").value("Apple"))
-            .andExpect(jsonPath("\$.price").value(item.price))
+            .andExpect(jsonPath("\$.price").value(1500.0))
     }
 
     @Test
@@ -208,10 +216,10 @@ class StoreItemIntegrationTests {
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.1,
-            locationLng = 0.1
+            location = Coordinate(0.1, 0.1)
         )
         val itemA = StoreItem(
+            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
             name = "Apple",
             description = "example description",
             photoUri = null,
@@ -219,6 +227,7 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemB = StoreItem(
+            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
             name = "Banana",
             description = "example description",
             photoUri = null,
@@ -226,9 +235,9 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
 
-        store.addMenuItem(itemA)
-        store.addMenuItem(itemB)
         storeRepository.save(store)
+        storeItemRepository.save(itemA)
+        storeItemRepository.save(itemB)
 
         mockMvc.perform(
             delete("/stores/${store.id}/items/${itemA.id}")

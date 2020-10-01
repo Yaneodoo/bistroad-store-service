@@ -2,6 +2,8 @@ package kr.bistroad.storeservice.store.application
 
 import io.swagger.annotations.ApiModel
 import kr.bistroad.storeservice.store.domain.Store
+import org.springframework.data.geo.GeoResult
+import org.springframework.data.geo.Metrics
 import java.util.*
 
 interface StoreDto {
@@ -22,7 +24,7 @@ interface StoreDto {
         val description: String? = null,
         val location: Location? = null
     ) : StoreDto {
-        data class Location(val lat: Double?, val lng: Double?)
+        data class Location(val lat: Double, val lng: Double)
     }
 
     @ApiModel("Store Response")
@@ -39,15 +41,44 @@ interface StoreDto {
 
         companion object {
             fun fromEntity(store: Store) = ForResult(
-                id = store.id!!,
+                id = store.id,
                 ownerId = store.ownerId,
                 name = store.name,
                 phone = store.phone,
                 description = store.description,
                 location = Location(
-                    lat = store.locationLat,
-                    lng = store.locationLng
+                    lat = store.location.lat,
+                    lng = store.location.lng
                 )
+            )
+        }
+    }
+
+    @ApiModel("Store Nearby Response")
+    data class ForNearbyResult(
+        val id: UUID,
+        val ownerId: UUID,
+        val name: String,
+        val phone: String,
+        val description: String,
+        val location: Location,
+        val distance: Double
+    ) : StoreDto {
+        @ApiModel("Store Nearby Response Location")
+        data class Location(val lat: Double, val lng: Double)
+
+        companion object {
+            fun fromEntity(store: GeoResult<Store>) = ForNearbyResult(
+                id = store.content.id,
+                ownerId = store.content.ownerId,
+                name = store.content.name,
+                phone = store.content.phone,
+                description = store.content.description,
+                location = Location(
+                    lat = store.content.location.lat,
+                    lng = store.content.location.lng
+                ),
+                distance = store.distance.`in`(Metrics.KILOMETERS).value / 1000
             )
         }
     }

@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.shouldBe
+import kr.bistroad.storeservice.global.domain.Coordinate
 import kr.bistroad.storeservice.store.domain.Store
 import kr.bistroad.storeservice.store.infrastructure.StoreRepository
 import kr.bistroad.storeservice.store.presentation.StoreRequest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -15,12 +17,10 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class StoreIntegrationTests {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -30,6 +30,9 @@ class StoreIntegrationTests {
 
     private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
 
+    @AfterEach
+    fun clear() = storeRepository.deleteAll()
+
     @Test
     fun `Gets a store`() {
         val store = Store(
@@ -37,8 +40,7 @@ class StoreIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.1,
-            locationLng = 0.1
+            location = Coordinate(0.1, 0.1)
         )
 
         storeRepository.save(store)
@@ -60,24 +62,21 @@ class StoreIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.1,
-            locationLng = 0.1
+            location = Coordinate(0.1, 0.1)
         )
         val storeB = Store(
             ownerId = UUID.randomUUID(),
             name = "B store",
             phone = "02-987-6543",
             description = "The worst store ever",
-            locationLat = 0.15,
-            locationLng = -0.15
+            location = Coordinate(0.15, -0.15)
         )
         val storeC = Store(
             ownerId = UUID.randomUUID(),
             name = "C store",
             phone = "02-000-0000",
             description = "Not a bad store",
-            locationLat = 0.0,
-            locationLng = 0.0
+            location = Coordinate(0.0, 0.0)
         )
 
         storeRepository.save(storeA)
@@ -93,35 +92,32 @@ class StoreIntegrationTests {
             .andExpect(jsonPath("\$.[0].ownerId").value(storeB.ownerId.toString()))
             .andExpect(jsonPath("\$.[0].name").value(storeB.name))
             .andExpect(jsonPath("\$.[1].id").value(storeA.id.toString()))
-            .andExpect(jsonPath("\$.[1].location.lat").value(storeA.locationLat))
-            .andExpect(jsonPath("\$.[1].location.lng").value(storeA.locationLng))
+            .andExpect(jsonPath("\$.[1].location.lat").value(storeA.location.lat))
+            .andExpect(jsonPath("\$.[1].location.lng").value(storeA.location.lng))
     }
 
     @Test
     fun `Searches nearby stores`() {
         val storeA = Store(
             ownerId = UUID.randomUUID(),
-            name = "A store",
+            name = "KW Univ. Bima-kwan",
             phone = "02-123-4567",
-            description = "The best store ever",
-            locationLat = 0.99,
-            locationLng = 1.01
+            description = "Bima-kwan",
+            location = Coordinate(37.61976485, 127.05975656)
         )
         val storeB = Store(
             ownerId = UUID.randomUUID(),
-            name = "B store",
+            name = "KW Univ. Saebit-kwan",
             phone = "02-987-6543",
-            description = "The worst store ever",
-            locationLat = 0.15,
-            locationLng = -0.15
+            description = "Saebit-kwan",
+            location = Coordinate(37.61969589, 127.06083834)
         )
         val storeC = Store(
             ownerId = UUID.randomUUID(),
-            name = "C store",
+            name = "KW Univ. Noori-kwan",
             phone = "02-000-0000",
-            description = "Not a bad store",
-            locationLat = 0.0,
-            locationLng = 0.0
+            description = "Noori-kwan",
+            location = Coordinate(37.62043522, 127.05495894)
         )
 
         storeRepository.save(storeA)
@@ -129,11 +125,18 @@ class StoreIntegrationTests {
         storeRepository.save(storeC)
 
         mockMvc.perform(
-            get("/stores/nearby?originLat=1&originLng=1&radius=0.1")
+            get("/stores/nearby")
+                .param("originLat", "37.61960241")
+                .param("originLng", "127.05948651")
+                .param("radius", "200")
+                .param("sort", "distance")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.[0].id").value(storeA.id.toString()))
+            .andExpect(jsonPath("\$.[0].distance").exists())
+            .andExpect(jsonPath("\$.[1].id").value(storeB.id.toString()))
+            .andExpect(jsonPath("\$.[1].distance").exists())
     }
 
     @Test
@@ -171,8 +174,7 @@ class StoreIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.99,
-            locationLng = 1.01
+            location = Coordinate(0.99, 1.01)
         )
         val body = StoreRequest.PatchBody(
             name = "B store"
@@ -200,16 +202,14 @@ class StoreIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
-            locationLat = 0.99,
-            locationLng = 1.01
+            location = Coordinate(0.99, 1.01)
         )
         val storeB = Store(
             ownerId = UUID.randomUUID(),
             name = "B store",
             phone = "02-987-6543",
             description = "The worst store ever",
-            locationLat = 0.15,
-            locationLng = -0.15
+            location = Coordinate(0.15, -0.15)
         )
 
         storeRepository.save(storeA)

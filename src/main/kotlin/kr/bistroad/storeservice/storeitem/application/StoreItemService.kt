@@ -2,9 +2,10 @@ package kr.bistroad.storeservice.storeitem.application
 
 import kr.bistroad.storeservice.global.error.exception.StoreItemNotFoundException
 import kr.bistroad.storeservice.global.error.exception.StoreNotFoundException
-import kr.bistroad.storeservice.store.infrastructure.StoreRepository
 import kr.bistroad.storeservice.storeitem.domain.StoreItem
+import kr.bistroad.storeservice.storeitem.domain.StoreOfItem
 import kr.bistroad.storeservice.storeitem.infrastructure.StoreItemRepository
+import kr.bistroad.storeservice.storeitem.infrastructure.StoreOfItemRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -12,21 +13,20 @@ import java.util.*
 
 @Service
 class StoreItemService(
-    private val storeRepository: StoreRepository,
+    private val storeRepository: StoreOfItemRepository,
     private val storeItemRepository: StoreItemRepository
 ) {
     fun createStoreItem(storeId: UUID, dto: StoreItemDto.ForCreate): StoreItemDto.ForResult {
         val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
         val item = StoreItem(
-                name = dto.name,
-                description = dto.description,
-                photoUri = null,
-                price = dto.price,
-                stars = 0.0
-        ).apply {
-            store.addMenuItem(this)
-        }
+            store = StoreOfItem(store),
+            name = dto.name,
+            description = dto.description,
+            photoUri = null,
+            price = dto.price,
+            stars = 0.0
+        )
 
         storeItemRepository.save(item)
         return StoreItemDto.ForResult.fromEntity(item)
@@ -54,11 +54,7 @@ class StoreItemService(
     }
 
     fun deleteStoreItem(storeId: UUID, id: UUID): Boolean {
-        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: return false
-        val store = item.store!!
-
-        store.removeMenuItem(item)
-        storeRepository.save(store)
-        return true
+        val removed = storeItemRepository.removeByStoreIdAndId(storeId, id)
+        return (removed > 0)
     }
 }
