@@ -41,6 +41,7 @@ class StoreIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
+            photoUri = "https://httpbin.org",
             location = Coordinate(0.1, 0.1)
         )
 
@@ -54,6 +55,7 @@ class StoreIntegrationTests {
             .andExpect(jsonPath("\$.id").value(store.id.toString()))
             .andExpect(jsonPath("\$.ownerId").value(store.owner.id.toString()))
             .andExpect(jsonPath("\$.name").value(store.name))
+            .andExpect(jsonPath("\$.photoUri").value(store.photoUri!!))
     }
 
     @Test

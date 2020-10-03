@@ -34,6 +34,7 @@ interface StoreDto {
         val name: String,
         val phone: String,
         val description: String,
+        val photoUri: String?,
         val location: Location
     ) : StoreDto {
         @ApiModel("Store Response Location")
@@ -46,6 +47,7 @@ interface StoreDto {
                 name = store.name,
                 phone = store.phone,
                 description = store.description,
+                photoUri = store.photoUri,
                 location = Location(
                     lat = store.location.lat,
                     lng = store.location.lng
@@ -61,6 +63,7 @@ interface StoreDto {
         val name: String,
         val phone: String,
         val description: String,
+        val photoUri: String?,
         val location: Location,
         val distance: Double
     ) : StoreDto {
@@ -74,6 +77,7 @@ interface StoreDto {
                 name = store.content.name,
                 phone = store.content.phone,
                 description = store.content.description,
+                photoUri = store.content.photoUri,
                 location = Location(
                     lat = store.content.location.lat,
                     lng = store.content.location.lng

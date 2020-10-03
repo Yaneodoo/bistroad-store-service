@@ -16,6 +16,7 @@ data class Store(
     var name: String,
     var phone: String,
     var description: String,
+    var photoUri: String? = null,
 
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     var location: Coordinate
