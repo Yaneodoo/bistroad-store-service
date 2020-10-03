@@ -12,8 +12,7 @@ data class Store(
     @Id
     val id: UUID = UUID.randomUUID(),
 
-    var ownerId: UUID,
-
+    var owner: Owner,
     var name: String,
     var phone: String,
     var description: String,

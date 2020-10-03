@@ -2,6 +2,7 @@ package kr.bistroad.storeservice.store.application
 
 import kr.bistroad.storeservice.global.domain.Coordinate
 import kr.bistroad.storeservice.global.error.exception.StoreNotFoundException
+import kr.bistroad.storeservice.store.domain.Owner
 import kr.bistroad.storeservice.store.domain.Store
 import kr.bistroad.storeservice.store.infrastructure.StoreRepository
 import org.springframework.data.domain.Pageable
@@ -15,7 +16,7 @@ class StoreService(
 ) {
     fun createStore(dto: StoreDto.ForCreate): StoreDto.ForResult {
         val store = Store(
-            ownerId = dto.ownerId,
+            owner = Owner(dto.ownerId),
             name = dto.name,
             phone = dto.phone,
             description = dto.description,
@@ -56,7 +57,7 @@ class StoreService(
     fun updateStore(id: UUID, dto: StoreDto.ForUpdate): StoreDto.ForResult {
         val store = storeRepository.findByIdOrNull(id) ?: throw StoreNotFoundException()
 
-        if (dto.ownerId != null) store.ownerId = dto.ownerId
+        if (dto.ownerId != null) store.owner = Owner(dto.ownerId)
         if (dto.name != null) store.name = dto.name
         if (dto.phone != null) store.phone = dto.phone
         if (dto.description != null) store.description = dto.description

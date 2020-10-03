@@ -42,7 +42,7 @@ interface StoreDto {
         companion object {
             fun fromEntity(store: Store) = ForResult(
                 id = store.id,
-                ownerId = store.ownerId,
+                ownerId = store.owner.id,
                 name = store.name,
                 phone = store.phone,
                 description = store.description,
@@ -70,7 +70,7 @@ interface StoreDto {
         companion object {
             fun fromEntity(store: GeoResult<Store>) = ForNearbyResult(
                 id = store.content.id,
-                ownerId = store.content.ownerId,
+                ownerId = store.content.owner.id,
                 name = store.content.name,
                 phone = store.content.phone,
                 description = store.content.description,

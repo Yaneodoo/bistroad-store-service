@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.shouldBe
 import kr.bistroad.storeservice.global.domain.Coordinate
+import kr.bistroad.storeservice.store.domain.Owner
 import kr.bistroad.storeservice.store.domain.Store
 import kr.bistroad.storeservice.store.infrastructure.StoreRepository
 import kr.bistroad.storeservice.storeitem.domain.StoreItem
@@ -20,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.util.*
-import kr.bistroad.storeservice.storeitem.domain.StoreOfItem as StoreItemStore
+import kr.bistroad.storeservice.storeitem.domain.Store as StoreItemStore
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,14 +46,14 @@ class StoreItemIntegrationTests {
     @Test
     fun `Gets an item`() {
         val store = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
             location = Coordinate(0.1, 0.1)
         )
         val item = StoreItem(
-            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
+            store = StoreItemStore(store),
             name = "Example",
             description = "example description",
             photoUri = null,
@@ -77,14 +78,14 @@ class StoreItemIntegrationTests {
     @Test
     fun `Searches items`() {
         val storeA = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
             location = Coordinate(0.1, 0.1)
         )
         val storeB = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "B store",
             phone = "02-987-6543",
             description = "The worst store ever",
@@ -92,7 +93,7 @@ class StoreItemIntegrationTests {
         )
 
         val itemA1 = StoreItem(
-            store = StoreItemStore(id = storeA.id, ownerId = storeA.ownerId),
+            store = StoreItemStore(storeA),
             name = "Apple",
             description = "example description",
             photoUri = null,
@@ -100,7 +101,7 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemA2 = StoreItem(
-            store = StoreItemStore(id = storeA.id, ownerId = storeA.ownerId),
+            store = StoreItemStore(storeA),
             name = "Banana",
             description = "example description",
             photoUri = null,
@@ -108,7 +109,7 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemA3 = StoreItem(
-            store = StoreItemStore(id = storeA.id, ownerId = storeA.ownerId),
+            store = StoreItemStore(storeA),
             name = "Peach",
             description = "example description",
             photoUri = null,
@@ -116,7 +117,7 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemB1 = StoreItem(
-            store = StoreItemStore(id = storeB.id, ownerId = storeB.ownerId),
+            store = StoreItemStore(storeB),
             name = "Steak",
             description = "example description",
             photoUri = null,
@@ -144,7 +145,7 @@ class StoreItemIntegrationTests {
     @Test
     fun `Posts an item`() {
         val store = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
@@ -175,14 +176,14 @@ class StoreItemIntegrationTests {
     @Test
     fun `Patches an item`() {
         val store = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
             location = Coordinate(0.1, 0.1)
         )
         val item = StoreItem(
-            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
+            store = StoreItemStore(store),
             name = "Apple",
             description = "example description",
             photoUri = null,
@@ -212,14 +213,14 @@ class StoreItemIntegrationTests {
     @Test
     fun `Deletes an item`() {
         val store = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
             location = Coordinate(0.1, 0.1)
         )
         val itemA = StoreItem(
-            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
+            store = StoreItemStore(store),
             name = "Apple",
             description = "example description",
             photoUri = null,
@@ -227,7 +228,7 @@ class StoreItemIntegrationTests {
             stars = 4.5
         )
         val itemB = StoreItem(
-            store = StoreItemStore(id = store.id, ownerId = store.ownerId),
+            store = StoreItemStore(store),
             name = "Banana",
             description = "example description",
             photoUri = null,

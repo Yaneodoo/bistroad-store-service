@@ -9,7 +9,7 @@ data class StoreItem(
     @Id
     val id: UUID = UUID.randomUUID(),
 
-    var store: StoreOfItem,
+    var store: Store,
     var name: String,
     var description: String,
     var photoUri: String?,

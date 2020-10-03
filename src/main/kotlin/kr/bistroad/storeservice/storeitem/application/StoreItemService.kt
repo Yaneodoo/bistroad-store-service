@@ -3,9 +3,9 @@ package kr.bistroad.storeservice.storeitem.application
 import kr.bistroad.storeservice.global.error.exception.StoreItemNotFoundException
 import kr.bistroad.storeservice.global.error.exception.StoreNotFoundException
 import kr.bistroad.storeservice.storeitem.domain.StoreItem
-import kr.bistroad.storeservice.storeitem.domain.StoreOfItem
+import kr.bistroad.storeservice.storeitem.domain.Store
 import kr.bistroad.storeservice.storeitem.infrastructure.StoreItemRepository
-import kr.bistroad.storeservice.storeitem.infrastructure.StoreOfItemRepository
+import kr.bistroad.storeservice.storeitem.infrastructure.StoreRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -13,14 +13,14 @@ import java.util.*
 
 @Service
 class StoreItemService(
-    private val storeRepository: StoreOfItemRepository,
+    private val storeRepository: StoreRepository,
     private val storeItemRepository: StoreItemRepository
 ) {
     fun createStoreItem(storeId: UUID, dto: StoreItemDto.ForCreate): StoreItemDto.ForResult {
         val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
         val item = StoreItem(
-            store = StoreOfItem(store),
+            store = Store(store),
             name = dto.name,
             description = dto.description,
             photoUri = null,

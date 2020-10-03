@@ -7,6 +7,7 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kr.bistroad.storeservice.global.domain.Coordinate
+import kr.bistroad.storeservice.store.domain.Owner
 import kr.bistroad.storeservice.store.domain.Store
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -28,7 +29,7 @@ internal class StoreRepositoryTest {
     @Test
     fun `Searches stores nearby`() {
         val store = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
@@ -45,17 +46,17 @@ internal class StoreRepositoryTest {
     @Test
     fun `Finds stores`() {
         val storeA = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "", phone = "", description = "",
             location = Coordinate(37.61976485, 127.05975656)
         )
         val storeB = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "", phone = "", description = "",
             location = Coordinate(37.61978087, 127.0608598)
         )
         val storeC = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "", phone = "", description = "",
             location = Coordinate(37.61987435, 127.05740511)
         )
@@ -79,7 +80,7 @@ internal class StoreRepositoryTest {
     @Test
     fun `Deletes a store`() {
         val store = Store(
-            ownerId = UUID.randomUUID(),
+            owner = Owner(UUID.randomUUID()),
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",

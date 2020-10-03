@@ -4,7 +4,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kr.bistroad.storeservice.storeitem.domain.StoreOfItem
+import kr.bistroad.storeservice.storeitem.domain.Store
 import kr.bistroad.storeservice.storeitem.domain.StoreItem
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -23,7 +23,7 @@ internal class StoreItemRepositoryTest {
     @Test
     fun `Saves an item`() {
         val item = StoreItem(
-            store = StoreOfItem(
+            store = Store(
                 id = UUID.randomUUID(),
                 ownerId = UUID.randomUUID()
             ),
@@ -44,7 +44,7 @@ internal class StoreItemRepositoryTest {
     @Test
     fun `Deletes an item`() {
         val item = StoreItem(
-            store = StoreOfItem(
+            store = Store(
                 id = UUID.randomUUID(),
                 ownerId = UUID.randomUUID()
             ),

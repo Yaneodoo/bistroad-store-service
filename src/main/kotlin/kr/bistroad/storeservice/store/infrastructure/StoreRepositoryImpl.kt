@@ -10,9 +10,9 @@ import org.springframework.data.geo.Metrics
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.find
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.NearQuery
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.mongodb.core.query.where
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -25,7 +25,7 @@ class StoreRepositoryImpl(
         pageable: Pageable
     ): Page<Store> {
         val query = Query()
-        if (ownerId != null) query.addCriteria(where(Store::ownerId).`is`(ownerId))
+        if (ownerId != null) query.addCriteria(Criteria.where("owner.id").`is`(ownerId))
 
         return mongoTemplate.find<Store>(query.with(pageable)).toPage(pageable)
     }
