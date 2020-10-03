@@ -25,7 +25,8 @@ interface StoreItemDto {
         val description: String,
         val price: Double,
         val photoUri: String? = null,
-        val stars: Double
+        val stars: Double,
+        var orderCount: Int
     ) : StoreItemDto {
         companion object {
             fun fromEntity(item: StoreItem) = ForResult(
@@ -35,7 +36,8 @@ interface StoreItemDto {
                 description = item.description,
                 photoUri = item.photoUri,
                 price = item.price,
-                stars = item.stars
+                stars = item.stars,
+                orderCount = item.orderCount
             )
         }
     }

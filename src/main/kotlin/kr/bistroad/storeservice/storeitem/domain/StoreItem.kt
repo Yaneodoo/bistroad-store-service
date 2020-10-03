@@ -14,5 +14,6 @@ data class StoreItem(
     var description: String,
     var photoUri: String?,
     var price: Double,
-    var stars: Double
+    var stars: Double,
+    var orderCount: Int = 0
 )

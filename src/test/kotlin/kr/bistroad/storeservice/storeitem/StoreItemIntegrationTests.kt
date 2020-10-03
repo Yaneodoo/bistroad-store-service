@@ -171,6 +171,7 @@ class StoreItemIntegrationTests {
             .andExpect(jsonPath("\$.name").value(body.name))
             .andExpect(jsonPath("\$.description").value(body.description))
             .andExpect(jsonPath("\$.price").value(body.price))
+            .andExpect(jsonPath("\$.orderCount").value(0))
     }
 
     @Test
