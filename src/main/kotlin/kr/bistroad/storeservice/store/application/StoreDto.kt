@@ -12,6 +12,7 @@ interface StoreDto {
         val name: String,
         val phone: String,
         val description: String,
+        val address: String,
         val location: Location
     ) : StoreDto {
         data class Location(val lat: Double, val lng: Double)
@@ -22,6 +23,7 @@ interface StoreDto {
         val name: String? = null,
         val phone: String? = null,
         val description: String? = null,
+        val address: String? = null,
         val location: Location? = null
     ) : StoreDto {
         data class Location(val lat: Double, val lng: Double)
@@ -34,6 +36,7 @@ interface StoreDto {
         val name: String,
         val phone: String,
         val description: String,
+        val address: String,
         val photoUri: String?,
         val location: Location
     ) : StoreDto {
@@ -47,6 +50,7 @@ interface StoreDto {
                 name = store.name,
                 phone = store.phone,
                 description = store.description,
+                address = store.address,
                 photoUri = store.photoUri,
                 location = Location(
                     lat = store.location.lat,
@@ -63,6 +67,7 @@ interface StoreDto {
         val name: String,
         val phone: String,
         val description: String,
+        val address: String,
         val photoUri: String?,
         val location: Location,
         val distance: Double
@@ -77,6 +82,7 @@ interface StoreDto {
                 name = store.content.name,
                 phone = store.content.phone,
                 description = store.content.description,
+                address = store.content.address,
                 photoUri = store.content.photoUri,
                 location = Location(
                     lat = store.content.location.lat,

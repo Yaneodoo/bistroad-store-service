@@ -33,6 +33,7 @@ internal class StoreRepositoryTest {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
+            address = "Seoul",
             location = Coordinate(0.1, 0.1)
         )
         storeRepository.save(store)
@@ -47,17 +48,17 @@ internal class StoreRepositoryTest {
     fun `Finds stores`() {
         val storeA = Store(
             owner = Owner(UUID.randomUUID()),
-            name = "", phone = "", description = "",
+            name = "", phone = "", description = "", address = "",
             location = Coordinate(37.61976485, 127.05975656)
         )
         val storeB = Store(
             owner = Owner(UUID.randomUUID()),
-            name = "", phone = "", description = "",
+            name = "", phone = "", description = "", address = "",
             location = Coordinate(37.61978087, 127.0608598)
         )
         val storeC = Store(
             owner = Owner(UUID.randomUUID()),
-            name = "", phone = "", description = "",
+            name = "", phone = "", description = "", address = "",
             location = Coordinate(37.61987435, 127.05740511)
         )
         storeRepository.save(storeA)
@@ -84,6 +85,7 @@ internal class StoreRepositoryTest {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
+            address = "Seoul",
             location = Coordinate(0.1, 0.1)
         )
         storeRepository.save(store)

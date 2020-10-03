@@ -50,6 +50,7 @@ class StoreItemIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
+            address = "Seoul",
             location = Coordinate(0.1, 0.1)
         )
         val item = StoreItem(
@@ -82,6 +83,7 @@ class StoreItemIntegrationTests {
             name = "A store",
             phone = "02-123-4567",
             description = "The best store ever",
+            address = "Seoul",
             location = Coordinate(0.1, 0.1)
         )
         val storeB = Store(
@@ -89,6 +91,7 @@ class StoreItemIntegrationTests {
             name = "B store",
             phone = "02-987-6543",
             description = "The worst store ever",
+            address = "Seoul",
             location = Coordinate(0.15, -0.15)
         )
 
@@ -149,6 +152,7 @@ class StoreItemIntegrationTests {
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
+            address = "Seoul",
             location = Coordinate(0.1, 0.1)
         )
         val body = StoreItemRequest.PostBody(
@@ -181,6 +185,7 @@ class StoreItemIntegrationTests {
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
+            address = "Seoul",
             location = Coordinate(0.1, 0.1)
         )
         val item = StoreItem(
@@ -218,6 +223,7 @@ class StoreItemIntegrationTests {
             name = "Fruit store",
             phone = "02-123-4567",
             description = "The best store ever",
+            address = "Seoul",
             location = Coordinate(0.1, 0.1)
         )
         val itemA = StoreItem(

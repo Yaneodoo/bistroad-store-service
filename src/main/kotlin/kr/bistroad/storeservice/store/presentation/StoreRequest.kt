@@ -32,6 +32,7 @@ interface StoreRequest {
         val name: String,
         val phone: String,
         val description: String,
+        val address: String,
         val location: Location
     ) {
         fun toDtoForCreate(): StoreDto.ForCreate =
@@ -40,6 +41,7 @@ interface StoreRequest {
                 name = name,
                 phone = phone,
                 description = description,
+                address = address,
                 location = StoreDto.ForCreate.Location(
                     lat = location.lat,
                     lng = location.lng
@@ -53,6 +55,7 @@ interface StoreRequest {
         val name: String? = null,
         val phone: String? = null,
         val description: String? = null,
+        val address: String? = null,
         val location: Location? = null
     ) {
         fun toDtoForUpdate(): StoreDto.ForUpdate =
@@ -61,6 +64,7 @@ interface StoreRequest {
                 name = name,
                 phone = phone,
                 description = description,
+                address = address,
                 location = location?.let {
                     StoreDto.ForUpdate.Location(
                         lat = location.lat,

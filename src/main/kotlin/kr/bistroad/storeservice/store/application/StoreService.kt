@@ -20,6 +20,7 @@ class StoreService(
             name = dto.name,
             phone = dto.phone,
             description = dto.description,
+            address = dto.address,
             location = Coordinate(dto.location.lat, dto.location.lng)
         )
         storeRepository.save(store)
@@ -61,6 +62,7 @@ class StoreService(
         if (dto.name != null) store.name = dto.name
         if (dto.phone != null) store.phone = dto.phone
         if (dto.description != null) store.description = dto.description
+        if (dto.address != null) store.address = dto.address
         if (dto.location != null) store.location = Coordinate(dto.location.lat, dto.location.lng)
 
         storeRepository.save(store)
