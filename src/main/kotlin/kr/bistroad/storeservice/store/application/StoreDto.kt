@@ -88,7 +88,7 @@ interface StoreDto {
                     lat = store.content.location.lat,
                     lng = store.content.location.lng
                 ),
-                distance = store.distance.`in`(Metrics.KILOMETERS).value / 1000
+                distance = store.distance.`in`(Metrics.KILOMETERS).value * 1000
             )
         }
     }
