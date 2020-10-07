@@ -12,7 +12,7 @@ data class StoreItem(
     var store: Store,
     var name: String,
     var description: String,
-    var photoUri: String?,
+    var photo: Photo? = null,
     var price: Double,
     var stars: Double,
     var orderCount: Int = 0

@@ -23,7 +23,6 @@ class StoreItemService(
             store = Store(store),
             name = dto.name,
             description = dto.description,
-            photoUri = null,
             price = dto.price,
             stars = 0.0
         )

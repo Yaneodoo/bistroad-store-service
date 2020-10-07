@@ -5,6 +5,7 @@ import kr.bistroad.storeservice.store.domain.Store
 import org.springframework.data.geo.GeoResult
 import org.springframework.data.geo.Metrics
 import java.util.*
+import kr.bistroad.storeservice.store.domain.Photo as DomainPhoto
 
 interface StoreDto {
     data class ForCreate(
@@ -37,11 +38,16 @@ interface StoreDto {
         val phone: String,
         val description: String,
         val address: String,
-        val photoUri: String?,
+        val photo: Photo?,
         val location: Location
     ) : StoreDto {
         @ApiModel("Store Response Location")
         data class Location(val lat: Double, val lng: Double)
+
+        @ApiModel("Store Response Photo")
+        data class Photo(val sourceUrl: String, val thumbnailUrl: String) {
+            constructor(domain: DomainPhoto): this(domain.sourceUrl, domain.thumbnailUrl)
+        }
 
         companion object {
             fun fromEntity(store: Store) = ForResult(
@@ -51,7 +57,7 @@ interface StoreDto {
                 phone = store.phone,
                 description = store.description,
                 address = store.address,
-                photoUri = store.photoUri,
+                photo = store.photo?.let(::Photo),
                 location = Location(
                     lat = store.location.lat,
                     lng = store.location.lng
@@ -68,12 +74,17 @@ interface StoreDto {
         val phone: String,
         val description: String,
         val address: String,
-        val photoUri: String?,
+        val photo: Photo?,
         val location: Location,
         val distance: Double
     ) : StoreDto {
         @ApiModel("Store Nearby Response Location")
         data class Location(val lat: Double, val lng: Double)
+
+        @ApiModel("Store Nearby Response Photo")
+        data class Photo(val sourceUrl: String, val thumbnailUrl: String) {
+            constructor(domain: DomainPhoto): this(domain.sourceUrl, domain.thumbnailUrl)
+        }
 
         companion object {
             fun fromEntity(store: GeoResult<Store>) = ForNearbyResult(
@@ -83,7 +94,7 @@ interface StoreDto {
                 phone = store.content.phone,
                 description = store.content.description,
                 address = store.content.address,
-                photoUri = store.content.photoUri,
+                photo = store.content.photo?.let(::Photo),
                 location = Location(
                     lat = store.content.location.lat,
                     lng = store.content.location.lng

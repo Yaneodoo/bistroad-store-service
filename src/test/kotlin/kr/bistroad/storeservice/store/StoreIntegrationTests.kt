@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.shouldBe
 import kr.bistroad.storeservice.global.domain.Coordinate
 import kr.bistroad.storeservice.store.domain.Owner
+import kr.bistroad.storeservice.store.domain.Photo
 import kr.bistroad.storeservice.store.domain.Store
 import kr.bistroad.storeservice.store.infrastructure.StoreRepository
 import kr.bistroad.storeservice.store.presentation.StoreRequest
@@ -42,7 +43,10 @@ class StoreIntegrationTests {
             phone = "02-123-4567",
             description = "The best store ever",
             address = "Seoul",
-            photoUri = "https://httpbin.org",
+            photo = Photo(
+                sourceUrl = "https://httpbin.org",
+                thumbnailUrl = "https://httpbin.org"
+            ),
             location = Coordinate(0.1, 0.1)
         )
 
@@ -57,7 +61,7 @@ class StoreIntegrationTests {
             .andExpect(jsonPath("\$.ownerId").value(store.owner.id.toString()))
             .andExpect(jsonPath("\$.name").value(store.name))
             .andExpect(jsonPath("\$.address").value(store.address))
-            .andExpect(jsonPath("\$.photoUri").value(store.photoUri!!))
+            .andExpect(jsonPath("\$.photo.sourceUrl").value(store.photo!!.sourceUrl))
     }
 
     @Test

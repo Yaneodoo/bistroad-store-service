@@ -31,9 +31,12 @@ class SwaggerConfig(
         .apiInfo(
             ApiInfoBuilder().title("Store API").build()
         )
-        .tags(Tag("/stores", "Store API"))
-        .tags(Tag("/stores/**/items", "Store Item API"))
-        .tags(Tag("/stores/**/items/**/upload-photo", "Store Item Photo Upload API"))
+        .tags(
+            Tag("/stores", "Store API"),
+            Tag("/stores/*/photo", "Store Photo API"),
+            Tag("/stores/**/items", "Store Item API"),
+            Tag("/stores/**/items/*/photo", "Store Item Photo API")
+        )
         .alternateTypeRules(
             newRule(
                 typeResolver.resolve(Pageable::class.java),

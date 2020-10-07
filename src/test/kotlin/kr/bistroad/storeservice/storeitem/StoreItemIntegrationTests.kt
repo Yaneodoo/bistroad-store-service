@@ -57,7 +57,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(store),
             name = "Example",
             description = "example description",
-            photoUri = null,
             price = 1000.0,
             stars = 4.5
         )
@@ -99,7 +98,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(storeA),
             name = "Apple",
             description = "example description",
-            photoUri = null,
             price = 2000.0,
             stars = 4.5
         )
@@ -107,7 +105,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(storeA),
             name = "Banana",
             description = "example description",
-            photoUri = null,
             price = 500.0,
             stars = 4.5
         )
@@ -115,7 +112,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(storeA),
             name = "Peach",
             description = "example description",
-            photoUri = null,
             price = 3000.0,
             stars = 4.5
         )
@@ -123,7 +119,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(storeB),
             name = "Steak",
             description = "example description",
-            photoUri = null,
             price = 10000.0,
             stars = 4.5
         )
@@ -192,7 +187,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(store),
             name = "Apple",
             description = "example description",
-            photoUri = null,
             price = 2000.0,
             stars = 4.5
         )
@@ -230,7 +224,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(store),
             name = "Apple",
             description = "example description",
-            photoUri = null,
             price = 2000.0,
             stars = 4.5
         )
@@ -238,7 +231,6 @@ class StoreItemIntegrationTests {
             store = StoreItemStore(store),
             name = "Banana",
             description = "example description",
-            photoUri = null,
             price = 500.0,
             stars = 4.5
         )

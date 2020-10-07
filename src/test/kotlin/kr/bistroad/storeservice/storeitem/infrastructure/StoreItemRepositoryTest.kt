@@ -29,7 +29,6 @@ internal class StoreItemRepositoryTest {
             ),
             name = "Apple",
             description = "example description",
-            photoUri = null,
             price = 2000.0,
             stars = 4.5
         )
@@ -50,7 +49,6 @@ internal class StoreItemRepositoryTest {
             ),
             name = "Apple",
             description = "example description",
-            photoUri = null,
             price = 2000.0,
             stars = 4.5
         )

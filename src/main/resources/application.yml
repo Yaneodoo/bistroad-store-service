@@ -23,6 +23,8 @@ swagger:
           description: Update a store partially
         delete-store:
           description: Delete a store
+        post-store-photo:
+          description: Upload a store photo
       store-item:
         get-store-item:
           description: Get an item by ID
@@ -36,6 +38,8 @@ swagger:
           description: Update an item partially
         delete-store-item:
           description: Delete an item
+        post-store-item-photo:
+          description: Upload a store item photo
     model:
       page:
         page:

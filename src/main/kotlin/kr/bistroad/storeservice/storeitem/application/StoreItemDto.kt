@@ -3,6 +3,7 @@ package kr.bistroad.storeservice.storeitem.application
 import io.swagger.annotations.ApiModel
 import kr.bistroad.storeservice.storeitem.domain.StoreItem
 import java.util.*
+import kr.bistroad.storeservice.storeitem.domain.Photo as DomainPhoto
 
 interface StoreItemDto {
     data class ForCreate(
@@ -24,17 +25,22 @@ interface StoreItemDto {
         val name: String,
         val description: String,
         val price: Double,
-        val photoUri: String? = null,
+        val photo: Photo? = null,
         val stars: Double,
         var orderCount: Int
     ) : StoreItemDto {
+        @ApiModel("Store Item Response Photo")
+        data class Photo(val sourceUrl: String, val thumbnailUrl: String) {
+            constructor(domain: DomainPhoto): this(domain.sourceUrl, domain.thumbnailUrl)
+        }
+
         companion object {
             fun fromEntity(item: StoreItem) = ForResult(
                 id = item.id,
                 storeId = item.store.id,
                 name = item.name,
                 description = item.description,
-                photoUri = item.photoUri,
+                photo = item.photo?.let(::Photo),
                 price = item.price,
                 stars = item.stars,
                 orderCount = item.orderCount
