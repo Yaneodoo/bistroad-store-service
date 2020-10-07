@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@Api(tags = ["/stores/**/items"])
+@Api(tags = ["/stores/*/items"])
 class StoreItemController(
     val storeItemService: StoreItemService
 ) {

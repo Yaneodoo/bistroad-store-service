@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @RestController
-@Api(tags = ["/stores/**/item/*/photo"])
+@Api(tags = ["/stores/*/items/*/photo"])
 class StoreItemPhotoController(
     private val storeItemPhotoService: StoreItemPhotoService
 ) {

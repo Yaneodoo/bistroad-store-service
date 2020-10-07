@@ -34,8 +34,8 @@ class SwaggerConfig(
         .tags(
             Tag("/stores", "Store API"),
             Tag("/stores/*/photo", "Store Photo API"),
-            Tag("/stores/**/items", "Store Item API"),
-            Tag("/stores/**/items/*/photo", "Store Item Photo API")
+            Tag("/stores/*/items", "Store Item API"),
+            Tag("/stores/*/items/*/photo", "Store Item Photo API")
         )
         .alternateTypeRules(
             newRule(
