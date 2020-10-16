@@ -5,9 +5,9 @@ import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import kr.bistroad.storeservice.global.error.exception.InvalidFileTypeException
 import kr.bistroad.storeservice.global.error.exception.StoreNotFoundException
+import kr.bistroad.storeservice.global.util.ThumbnailUtils
 import kr.bistroad.storeservice.store.domain.Photo
 import kr.bistroad.storeservice.store.infrastructure.StoreRepository
-import net.coobird.thumbnailator.Thumbnails
 import org.apache.commons.io.FilenameUtils
 import org.apache.commons.lang.RandomStringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +16,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.*
 
@@ -24,6 +23,12 @@ import java.util.*
 class StorePhotoService(
     @Value("\${gcs.bucket-name:bistroad-kr-photo-bucket}")
     private val bucketName: String,
+
+    @Value("\${app.thumbnail.min-width:500}")
+    private val minWidth: Int,
+
+    @Value("\${app.thumbnail.min-height:500}")
+    private val minHeight: Int,
 
     @Autowired(required = false)
     private val storage: Storage? = null,
@@ -36,15 +41,11 @@ class StorePhotoService(
 
         val store = storeRepository.findByIdOrNull(storeId) ?: throw StoreNotFoundException()
 
-        val thumbnailOutputStream = ByteArrayOutputStream()
-        Thumbnails.of(file.inputStream)
-            .width(RESIZE_WIDTH)
-            .keepAspectRatio(true)
-            .toOutputStream(thumbnailOutputStream)
-        val thumbnailInputStream = ByteArrayInputStream(thumbnailOutputStream.toByteArray())
-
         val sourceBlob = createBlobFrom(file.inputStream, randomNameFor(file))
-        val thumbnailBlob = createBlobFrom(thumbnailInputStream, randomNameFor(file))
+        val thumbnailBlob = ByteArrayInputStream(ThumbnailUtils.optimize(file.bytes, minWidth, minHeight))
+            .use {
+                createBlobFrom(it, randomNameFor(file))
+            }
 
         store.photo = Photo(
             sourceUrl = "$PUBLIC_URL/$bucketName/${sourceBlob.name}",
@@ -70,6 +71,5 @@ class StorePhotoService(
         )
 
         const val PUBLIC_URL = "https://storage.googleapis.com"
-        const val RESIZE_WIDTH = 100
     }
 }
