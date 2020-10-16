@@ -34,7 +34,7 @@ class StoreItemPhotoService(
 
     private val storeItemRepository: StoreItemRepository
 ) {
-    fun upload(storeId: UUID, itemId: UUID, file: MultipartFile) {
+    fun upload(storeId: UUID, itemId: UUID, file: MultipartFile): StoreItemDto.ForResult {
         require(file.contentType in ALLOWED_CONTENT_TYPES) { throw InvalidFileTypeException() }
         check(storage != null)
 
@@ -51,6 +51,8 @@ class StoreItemPhotoService(
             thumbnailUrl = "$PUBLIC_URL/$bucketName/${thumbnailBlob.name}"
         )
         storeItemRepository.save(item)
+
+        return StoreItemDto.ForResult.fromEntity(item)
     }
 
     private fun createBlobFrom(inputStream: InputStream, fileName: String) =
