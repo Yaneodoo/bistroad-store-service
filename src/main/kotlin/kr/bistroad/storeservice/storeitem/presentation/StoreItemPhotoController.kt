@@ -19,7 +19,7 @@ class StoreItemPhotoController(
 ) {
     @PostMapping("/stores/{storeId}/items/{id}/photo", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ApiOperation("\${swagger.doc.operation.store-item.post-store-item-photo.description}")
-    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or hasPermission(#id, 'Store', 'write') )")
+    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or hasPermission(#storeId, 'Store', 'write') )")
     fun postPhoto(@PathVariable storeId: UUID, @PathVariable id: UUID, @RequestPart file: MultipartFile) =
         storeItemPhotoService.upload(storeId, id, file)
 }
