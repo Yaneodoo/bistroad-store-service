@@ -2,6 +2,7 @@ package kr.bistroad.storeservice.storeitem.presentation
 
 import io.swagger.annotations.ApiModel
 import kr.bistroad.storeservice.storeitem.application.StoreItemDto
+import java.util.*
 
 interface StoreItemRequest {
     @ApiModel("Store Item Create Body")
@@ -31,4 +32,13 @@ interface StoreItemRequest {
                 price = price
             )
     }
+
+    data class AddReviewStarBody(
+        val reviewId: UUID,
+        val star: Int
+    )
+
+    data class RemoveReviewStarBody(
+        val reviewId: UUID
+    )
 }

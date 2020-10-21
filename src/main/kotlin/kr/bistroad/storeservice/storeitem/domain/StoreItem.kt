@@ -14,6 +14,7 @@ data class StoreItem(
     var description: String,
     var photo: Photo? = null,
     var price: Double,
-    var stars: Double,
+    var stars: Double = 0.0,
+    val reviewStars: MutableMap<UUID, Int> = mutableMapOf(),
     var orderCount: Int = 0
 )

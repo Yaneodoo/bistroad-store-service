@@ -52,6 +52,42 @@ class StoreItemService(
         return StoreItemDto.ForResult.fromEntity(item)
     }
 
+    fun addOrderCount(storeId: UUID, id: UUID): StoreItemDto.ForResult {
+        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: throw StoreItemNotFoundException()
+
+        item.orderCount++
+        storeItemRepository.save(item)
+        return StoreItemDto.ForResult.fromEntity(item)
+    }
+
+    fun subtractOrderCount(storeId: UUID, id: UUID): StoreItemDto.ForResult {
+        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: throw StoreItemNotFoundException()
+
+        item.orderCount--
+        storeItemRepository.save(item)
+        return StoreItemDto.ForResult.fromEntity(item)
+    }
+
+    fun addReviewStar(storeId: UUID, id: UUID, reviewId: UUID, star: Int): StoreItemDto.ForResult {
+        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: throw StoreItemNotFoundException()
+
+        item.reviewStars[reviewId] = star
+        item.stars = item.reviewStars.values.average()
+
+        storeItemRepository.save(item)
+        return StoreItemDto.ForResult.fromEntity(item)
+    }
+
+    fun removeReviewStar(storeId: UUID, id: UUID, reviewId: UUID): StoreItemDto.ForResult {
+        val item = storeItemRepository.findByStoreIdAndId(storeId, id) ?: throw StoreItemNotFoundException()
+
+        item.reviewStars.remove(reviewId)
+        item.stars = item.reviewStars.values.average()
+
+        storeItemRepository.save(item)
+        return StoreItemDto.ForResult.fromEntity(item)
+    }
+
     fun deleteStoreItem(storeId: UUID, id: UUID): Boolean {
         val removed = storeItemRepository.removeByStoreIdAndId(storeId, id)
         return (removed > 0)

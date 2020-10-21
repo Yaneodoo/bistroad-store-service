@@ -50,4 +50,36 @@ class StoreItemController(
         val deleted = storeItemService.deleteStoreItem(storeId, id)
         if (!deleted) throw StoreItemNotFoundException()
     }
+
+    @PostMapping("/stores/{storeId}/items/{id}/add-order-count")
+    @ApiOperation(value = "Add order count for data integrity", hidden = true)
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+    fun addOrderCount(@PathVariable storeId: UUID, @PathVariable id: UUID) =
+        storeItemService.addOrderCount(storeId, id)
+
+    @PostMapping("/stores/{storeId}/items/{id}/subtract-order-count")
+    @ApiOperation(value = "Subtract order count for data integrity", hidden = true)
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+    fun subtractOrderCount(@PathVariable storeId: UUID, @PathVariable id: UUID) =
+        storeItemService.subtractOrderCount(storeId, id)
+
+    @PostMapping("/stores/{storeId}/items/{id}/add-review-star")
+    @ApiOperation(value = "Add review star for data integrity", hidden = true)
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+    fun addReviewStar(
+        @PathVariable storeId: UUID,
+        @PathVariable id: UUID,
+        @RequestBody body: StoreItemRequest.AddReviewStarBody
+    ) =
+        storeItemService.addReviewStar(storeId, id, body.reviewId, body.star)
+
+    @PostMapping("/stores/{storeId}/items/{id}/remove-review-star")
+    @ApiOperation(value = "Remove review star for data integrity", hidden = true)
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+    fun removeReviewStar(
+        @PathVariable storeId: UUID,
+        @PathVariable id: UUID,
+        @RequestBody body: StoreItemRequest.RemoveReviewStarBody
+    ) =
+        storeItemService.removeReviewStar(storeId, id, body.reviewId)
 }
