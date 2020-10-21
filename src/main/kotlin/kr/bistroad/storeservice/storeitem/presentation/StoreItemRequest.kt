@@ -35,7 +35,7 @@ interface StoreItemRequest {
 
     data class AddReviewStarBody(
         val reviewId: UUID,
-        val star: Int
+        val stars: Int
     )
 
     data class RemoveReviewStarBody(

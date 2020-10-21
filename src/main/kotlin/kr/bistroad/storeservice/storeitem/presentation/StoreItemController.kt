@@ -71,7 +71,7 @@ class StoreItemController(
         @PathVariable id: UUID,
         @RequestBody body: StoreItemRequest.AddReviewStarBody
     ) =
-        storeItemService.addReviewStar(storeId, id, body.reviewId, body.star)
+        storeItemService.addReviewStar(storeId, id, body.reviewId, body.stars)
 
     @PostMapping("/stores/{storeId}/items/{id}/remove-review-star")
     @ApiOperation(value = "Remove review star for data integrity", hidden = true)
