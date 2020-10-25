@@ -48,6 +48,9 @@ dependencies {
     // Spring Cloud GCP
     implementation("org.springframework.cloud:spring-cloud-gcp-starter-storage:1.2.5.RELEASE")
 
+    // Spring Actuator
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     // Swagger
     implementation("io.springfox:springfox-boot-starter:3.0.0")
 
